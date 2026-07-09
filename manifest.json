@@ -1,9 +1,10 @@
 {
-  "name": "O Boticário OS - Matheus Julio",
-  "short_name": "OB OS",
-  "start_url": "/",
+  "name": "Gestão OBoticário",
+  "short_name": "OBoticario Os",
+  "start_url": "/Oboticario2.0/admin.html",
+  "scope": "/Oboticario2.0/",
   "display": "standalone",
-  "background_color": "#f8fafc",
+  "background_color": "#10b981",
   "theme_color": "#10b981",
   "icons": [
     {

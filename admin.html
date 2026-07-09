@@ -4,7 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão O Boticário — Enterprise OS</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512x512.png">
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="icon-180x180.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="OB OS">
+    <title>Gestão OBoticário</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { light: '#00A396', dark: '#007A70' } } } } }
@@ -24,12 +33,12 @@
         body {
             background-size: 400% 400%;
             animation: gradientBG 20s ease infinite;
-            background-image: linear-gradient(-45deg, #f8fafc, #f1f5f9, #e2e8f0, #f8fafc);
+            background-image: linear-gradient(-45deg, #b3d8d0, #e5f3f0, #e2f0ec, #cdfff4);
         }
 
         /* CORREÇÃO AQUI: Aplica o fundo se o HTML for .dark */
         .dark body {
-            background-image: linear-gradient(-45deg, #020617, #0f172a, #1e293b, #020617);
+            background-image: linear-gradient(-45deg, #020617, #1c2335, #080b0f, #020617);
         }
 
         @keyframes gradientBG {
@@ -129,7 +138,7 @@
             <div
                 class="w-8 h-8 rounded-lg bg-brand-light text-white flex items-center justify-center font-black shadow-md">
                 OB</div>
-            <span class="font-black text-brand-light tracking-tight text-lg">O Boticário<span
+            <span class="font-black text-brand-light tracking-tight text-lg">OBoticário<span
                     class="font-light text-slate-400">OS</span></span>
         </div>
         <button onclick="window.toggleTheme()"
@@ -154,12 +163,14 @@
                 class="w-10 h-10 rounded-xl bg-brand-light text-white flex items-center justify-center font-black shrink-0 shadow-md">
                 OB</div>
             <span
-                class="ml-4 font-black text-brand-light tracking-tight text-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">O
-                Boticário<span class="font-light text-slate-400">OS</span></span>
+                class="ml-4 font-black text-brand-light tracking-tight text-xl hidden group-hover:md:block whitespace-nowrap">OBoticário<span
+                    class="font-light text-slate-400">OS</span></span>
         </div>
 
-        <nav class="flex-1 flex flex-row md:flex-col justify-around md:justify-start px-2 md:px-3 py-2 md:py-4 gap-1 md:gap-2 overflow-x-auto md:overflow-y-auto no-scrollbar">
-            <div class="p-2 md:p-3 rounded-xl flex flex-col md:flex-row items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item nav-active"
+        <nav
+            class="flex-1 flex flex-row md:flex-col justify-around md:justify-start px-2 md:px-3 py-2 md:py-4 gap-1 md:gap-2 overflow-x-auto md:overflow-y-auto no-scrollbar">
+
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item nav-active"
                 onclick="window.navigate('dashboard', this)">
                 <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -167,33 +178,33 @@
                     </path>
                 </svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Painel</span>
-                <span
-                    class="hidden md:block ml-4 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Visão
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Visão
                     Geral</span>
             </div>
-            <div class="p-2 md:p-3 rounded-xl flex flex-col md:flex-row items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
+
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
                 onclick="window.navigate('importar', this)">
                 <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                 </svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Importar</span>
-                <span
-                    class="hidden md:block ml-4 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Importar
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Importar
                     PDF</span>
             </div>
-            <div class="p-2 md:p-3 rounded-xl flex flex-col md:flex-row items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
+
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
                 onclick="window.navigate('pedidos', this)">
                 <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                 </svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Pedidos</span>
-                <span
-                    class="hidden md:block ml-4 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Pedidos
-                    & Recibos</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Pedidos &
+                    Recibos</span>
             </div>
-            <div class="p-2 md:p-3 rounded-xl flex flex-col md:flex-row items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
+
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
                 onclick="window.navigate('brindes', this)">
                 <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -201,11 +212,11 @@
                     </path>
                 </svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Brindes</span>
-                <span
-                    class="hidden md:block ml-4 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Brindes
-                    & Amostras</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Brindes &
+                    Amostras</span>
             </div>
-            <div class="p-2 md:p-3 rounded-xl flex flex-col md:flex-row items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
+
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
                 onclick="window.navigate('clientes', this)">
                 <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -213,11 +224,11 @@
                     </path>
                 </svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Clientes</span>
-                <span
-                    class="hidden md:block ml-4 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Carteira
-                    de Clientes</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Carteira de
+                    Clientes</span>
             </div>
-            <div class="p-2 md:p-3 rounded-xl flex flex-col md:flex-row items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
+
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
                 onclick="window.navigate('faturas', this)">
                 <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -225,14 +236,13 @@
                     </path>
                 </svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Faturas</span>
-                <span
-                    class="hidden md:block ml-4 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Faturas
-                    O Boticário</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Faturas O
+                    Boticário</span>
             </div>
         </nav>
 
-        <div class="hidden md:flex p-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
-            <div class="p-2 w-full rounded-xl flex items-center text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+        <div class="hidden md:flex p-3 border-t border-slate-200 dark:border-slate-800 shrink-0">
+            <div class="p-3 w-full rounded-xl flex items-center justify-center md:group-hover:justify-start md:px-4 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
                 onclick="window.toggleTheme()">
                 <svg class="w-6 h-6 shrink-0 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -244,9 +254,7 @@
                         d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
                     </path>
                 </svg>
-                <span
-                    class="ml-4 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Mudar
-                    Tema</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Mudar Tema</span>
             </div>
         </div>
     </aside>
@@ -290,24 +298,24 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
                     <div
                         class="p-6 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <h3
+                        <h4
                             class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">
-                            A Receber (Clientes)</h3>
+                            A Receber (Clientes)</h4>
                         <p id="dash-receber" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">R$ 0,00
                         </p>
                     </div>
                     <div
                         class="p-6 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <h3
+                        <h4
                             class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">
-                            A Pagar (Faturas)</h3>
+                            A Pagar (Faturas)</h4>
                         <p id="dash-custo" class="text-3xl font-bold text-rose-600 dark:text-rose-500">R$ 0,00</p>
                     </div>
                     <div
                         class="p-6 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <h3
+                        <h4
                             class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">
-                            Itens em Estoque</h3>
+                            Itens em Estoque</h4>
                         <p id="dash-estoque" class="text-3xl font-bold text-brand-light dark:text-brand-dark">0</p>
                     </div>
                 </div>
@@ -457,7 +465,8 @@
                         <span
                             class="block text-slate-400 text-[10px] md:text-xs font-semibold uppercase mb-1">Revenda</span><strong
                             id="modal-produto-revenda" class="text-base md:text-lg text-brand-light font-black">R$
-                            0,00</strong></div>
+                            0,00</strong>
+                    </div>
                 </div>
             </div>
             <div class="mb-5">
@@ -768,15 +777,40 @@
                         f.parcelas.forEach((p, idx) => {
                             if (p.status !== 'pago') totalPagar += p.valor;
                             const cor = p.status === 'pago' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
-                            btsParcelas += `<div class="flex justify-between items-center text-sm py-2 border-b border-slate-200 dark:border-slate-700 last:border-0"><span class="dark:text-slate-300 font-bold">${p.numero}x - Venc: ${p.vencimento} - R$ ${formatMoney(p.valor)}</span><button onclick="window.pagarParcelaFatura('${docS.id}', ${idx}, '${p.status}', ${p.valor})" class="px-3 py-1 rounded text-xs font-bold uppercase ${cor} shadow-sm transition-colors">${p.status === 'pago' ? 'Pago' : 'Pagar Fatura'}</button></div>`;
+                            btsParcelas += `<div class="flex justify-between items-center text-sm py-2 border-b border-slate-200 dark:border-slate-700 last:border-0"><span class="dark:text-slate-300">${p.numero}x - Venc: ${p.vencimento} - R$ ${formatMoney(p.valor)}</span><button onclick="window.pagarParcelaFatura('${docS.id}', ${idx}, '${p.status}', ${p.valor})" class="px-3 py-1 rounded text-xs font-bold uppercase ${cor} shadow-sm transition-colors">${p.status === 'pago' ? 'Pago' : 'Pagar'}</button></div>`;
                         });
                     }
                     faturasHTML += `<div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 relative"><button onclick="window.excluirFatura('${docS.id}')" class="edit-action absolute top-4 right-4 bg-rose-600 text-white px-3 py-1.5 rounded-lg text-[10px] font-black z-10 shadow-sm hover:bg-rose-700">EXCLUIR FATURA</button><div class="flex justify-between items-start mb-4"><div><h4 class="font-black text-lg text-slate-800 dark:text-white">Ref: #${docS.id}</h4><p class="text-xs text-slate-500 dark:text-slate-400">Importação: ${new Date(f.data).toLocaleDateString('pt-BR')}</p></div><div class="text-right"><span class="block text-sm font-semibold text-slate-500 dark:text-slate-400">Custo Total</span><span class="text-xl font-black text-rose-600 dark:text-rose-500">R$ ${formatMoney(fTotal)}</span></div></div><div class="space-y-1">${btsParcelas}</div></div>`;
                 });
                 document.getElementById('lista-faturas').innerHTML = faturasHTML || '<p class="text-slate-500 dark:text-slate-400">Nenhuma fatura registrada.</p>';
 
+                // --- INÍCIO DA ALTERAÇÃO PARA ORDENAÇÃO ---
+                // 1. Extrai os dados do snapshot para um array e calcula o vencimento ativo mais próximo
+                let pedidosOrdenados = [];
                 vendasSnap.forEach(docSnap => {
-                    const v = docSnap.data(); const vId = docSnap.id; const nomeCli = v.nome_cliente.toUpperCase();
+                    const v = docSnap.data();
+                    const vId = docSnap.id;
+                    
+                    let proximoVencimento = Infinity; // Padrão caso todas as parcelas estejam pagas (vai para o fim)
+                    if (v.parcelas) {
+                        v.parcelas.forEach(p => {
+                            if (p.status === 'pendente') {
+                                const timestampParcela = parseDataBr(p.vencimento);
+                                if (timestampParcela < proximoVencimento) {
+                                    proximoVencimento = timestampParcela;
+                                }
+                            }
+                        });
+                    }
+                    pedidosOrdenados.push({ docSnap, v, vId, proximoVencimento });
+                });
+
+                // 2. Ordena o array: o menor timestamp (data mais próxima ou mais atrasada) vem primeiro
+                pedidosOrdenados.sort((a, b) => a.proximoVencimento - b.proximoVencimento);
+
+                // 3. Renderiza os cards seguindo a nova ordem estabelecida
+                pedidosOrdenados.forEach(({ docSnap, v, vId }) => {
+                    const nomeCli = v.nome_cliente.toUpperCase();
                     if (!clientesMap[nomeCli]) clientesMap[nomeCli] = { nome: nomeCli, telefone: v.telefone || '', total_comprado: 0, pedidos: 0 };
                     clientesMap[nomeCli].pedidos += 1; clientesMap[nomeCli].total_comprado += (v.total || 0);
                     window.cacheClientes[nomeCli] = clientesMap[nomeCli];
@@ -808,7 +842,7 @@
                                     </div>
                                     <div class="text-right pl-2 shrink-0">
                                         <button onclick="window.alternarPagamentoCliente('${vId}', ${idx}, '${p.status}', ${p.valor})" class="px-3 py-1.5 text-[10px] font-black uppercase rounded-lg shadow-sm transition-all ${btnColor}">
-                                            ${isPago ? 'Desfazer' : 'Dar Baixa'}
+                                            ${isPago ? 'Pago' : 'Pagar'}
                                         </button>
                                     </div>
                                 </div>`;
@@ -838,6 +872,7 @@
                             </div>
                         </div>`;
                 });
+                // --- FIM DA ALTERAÇÃO ---
 
                 let cliHTML = '';
                 Object.values(clientesMap).forEach(c => {

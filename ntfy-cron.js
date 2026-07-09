@@ -1,5 +1,5 @@
-const { initializeApp } = require("firebase/app");
-const { getFirestore, collection, getDocs } = require("firebase/firestore");
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
 
 // Insere aqui o teu objeto firebaseConfig exatamente como usas no teu admin.html
 const firebaseConfig = {

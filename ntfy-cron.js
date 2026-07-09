@@ -93,13 +93,13 @@ async function processarVencimentos() {
             msgNtfy += `🛍️ **COBRANÇAS CLIENTES**\n${alertasClientes.join('\n')}`;
         }
 
-        // 4. Envio do POST assíncrono para o Ntfy
+        // 4. Envio usando a API fetch nativa do Node 18+ (Corrigido sem emojis no Header)
         console.log("A enviar notificação para o Ntfy...");
         await fetch('https://ntfy.sh/bto_cob_matheus', {
             method: 'POST',
             body: msgNtfy.trim(),
             headers: {
-                'Title': '⚠️ Relatório Diário de Vencimentos',
+                'Title': 'Relatorio Diario de Vencimentos',
                 'Tags': 'rotating_light,moneybag',
                 'Markdown': 'yes'
             }

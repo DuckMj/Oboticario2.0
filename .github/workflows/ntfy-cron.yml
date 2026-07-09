@@ -2,9 +2,8 @@ name: Executar Alertas Ntfy de Vencimento
 
 on:
   schedule:
-    # Executa todos os dias às 08:00 do horário de Brasília (11:00 UTC)
     - cron: '0 11 * * *'
-  workflow_dispatch: # Permite-te executar o script manualmente pelo painel do GitHub
+  workflow_dispatch:
 
 jobs:
   verificar-prazos:
@@ -21,6 +20,7 @@ jobs:
       - name: Instalar Dependências
         run: |
           npm init -y
+          npm pkg set type="module"
           npm install firebase
 
       - name: Executar Script de Alertas

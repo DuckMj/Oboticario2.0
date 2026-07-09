@@ -11,7 +11,7 @@ const firebaseConfig = {
     appId: "1:1049718432679:web:94a2a574729fddd4750c82"
 };
 
-// Inicialização do Firebase em ambiente Node.js
+// Inicialização do Firebase utilizando ESM
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -32,8 +32,8 @@ async function processarVencimentos() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
-    let alertasClientes = [];
-    let alertasFaturas = [];
+    // Array para armazenar as notificações individuais antes do disparo
+    let filaNotificacoes = [];
 
     try {
         console.log("A iniciar ligação ao Firestore...");
@@ -53,7 +53,12 @@ async function processarVencimentos() {
 
                         if (diffDias <= limiteDiasAviso) {
                             let statusText = diffDias < 0 ? `🔴 Vencido há ${Math.abs(diffDias)} dias` : (diffDias === 0 ? `🟡 Vence HOJE` : `🟢 Vence em ${diffDias} dias`);
-                            alertasFaturas.push(`- Fatura #${docSnap.id} (${p.numero}x): R$ ${formatMoney(p.valor)} (${statusText})`);
+                            
+                            filaNotificacoes.push({
+                                title: "Fatura O Boticario",
+                                body: `🏢 **ALERTA DE FATURA**\n\nID: #${docSnap.id}\nParcela: ${p.numero}x\nValor: R$ ${formatMoney(p.valor)}\n\nCronograma: ${statusText}`,
+                                tags: "building,moneybag"
+                            });
                         }
                     }
                 });
@@ -71,41 +76,43 @@ async function processarVencimentos() {
 
                         if (diffDias <= limiteDiasAviso) {
                             let statusText = diffDias < 0 ? `🔴 Vencido há ${Math.abs(diffDias)} dias` : (diffDias === 0 ? `🟡 Vence HOJE` : `🟢 Vence em ${diffDias} dias`);
-                            alertasClientes.push(`- ${v.nome_cliente.toUpperCase()}: R$ ${formatMoney(p.valor)} (${statusText})`);
+                            
+                            filaNotificacoes.push({
+                                title: "Cobranca de Cliente",
+                                body: `🛍️ **COBRANÇA PENDENTE**\n\nCliente: ${v.nome_cliente.toUpperCase()}\nValor: R$ ${formatMoney(p.valor)}\nVencimento: ${p.vencimento}\n\nCronograma: ${statusText}`,
+                                tags: "shopping_bags,money_with_wings"
+                            });
                         }
                     }
                 });
             }
         });
 
-        // Se não existirem registos críticos, finaliza a execução sem gastar dados do Ntfy
-        if (alertasClientes.length === 0 && alertasFaturas.length === 0) {
+        // Se não houver alertas, encerra sem chamadas HTTP
+        if (filaNotificacoes.length === 0) {
             console.log("Nenhum vencimento detetado para os próximos dias.");
             process.exit(0);
         }
 
-        // 3. Estruturação da Mensagem Markdown
-        let msgNtfy = '';
-        if (alertasFaturas.length > 0) {
-            msgNtfy += `🏢 **FATURAS OBOTICÁRIO**\n${alertasFaturas.join('\n')}\n\n`;
-        }
-        if (alertasClientes.length > 0) {
-            msgNtfy += `🛍️ **COBRANÇAS CLIENTES**\n${alertasClientes.join('\n')}`;
+        console.log(`Total de alertas gerados: ${filaNotificacoes.length}. Iniciando disparos sequenciais...`);
+
+        // 3. Envio Individualizado (Loop síncrono com await para isolar as notificações)
+        for (const notificacao of filaNotificacoes) {
+            await fetch('https://ntfy.sh/bto_cob_matheus', {
+                method: 'POST',
+                body: notificacao.body.trim(),
+                headers: {
+                    'Title': notificacao.title, // String limpa sem emojis (evita erro ByteString)
+                    'Tags': notificacao.tags,
+                    'Markdown': 'yes'
+                }
+            });
+            
+            // Pequena pausa técnica de 300ms entre as requisições para evitar gargalo e garantir a ordem de entrega
+            await new Promise(resolve => setTimeout(resolve, 300));
         }
 
-        // 4. Envio usando a API fetch nativa do Node 18+ (Corrigido sem emojis no Header)
-        console.log("A enviar notificação para o Ntfy...");
-        await fetch('https://ntfy.sh/bto_cob_matheus', {
-            method: 'POST',
-            body: msgNtfy.trim(),
-            headers: {
-                'Title': 'Relatorio Diario de Vencimentos',
-                'Tags': 'rotating_light,moneybag',
-                'Markdown': 'yes'
-            }
-        });
-
-        console.log("Execução concluída com sucesso.");
+        console.log("Todas as notificações individuais foram enviadas com sucesso.");
         process.exit(0);
 
     } catch (error) {

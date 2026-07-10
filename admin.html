@@ -755,9 +755,27 @@
         };
 
         window.enviarCobrancaWPP = (tel, nome, numParc, valor, dataVenc, diasAtraso) => {
-            let msg = `Olá, *${nome}*! Espero que esteja bem. ✨\n\nPassando para compartilhar o detalhamento da *Parcela ${numParc}* referente ao seu pedido da O Boticário.\n\n🛍️ *Valor da Parcela:* R$ ${formatMoney(valor)}\n🗓️ *Vencimento:* ${dataVenc}`;
-            if (diasAtraso > 0) msg += `\n⚠️ _(O valor inclui acréscimos por atraso)_`;
+            let msg = `Olá, *${nome}*! Espero que esteja bem. ✨\n\nPassando para compartilhar o detalhamento da *Parcela ${numParc}* referente ao seu pedido da O Boticário.\n\n🗓️ *Vencimento original:* ${dataVenc}`;
+
+            if (diasAtraso > 0) {
+                const multa = 5.93;
+                const juros = diasAtraso * 0.89;
+
+                // O valor que chega aqui JÁ É O TOTAL ATUALIZADO. 
+                // Portanto, o valor base real é o valor passado menos as taxas.
+                const valorBase = valor - multa - juros;
+
+                msg += `\n\n⚠️ *Atenção: Parcela em atraso (${diasAtraso} dias).*`;
+                msg += `\n➖ Valor base original: R$ ${formatMoney(valorBase)}`;
+                msg += `\n➕ Multa fixa: R$ ${formatMoney(multa)}`;
+                msg += `\n➕ Juros acumulados: R$ ${formatMoney(juros)}`;
+                msg += `\n💰 *Total atualizado: R$ ${formatMoney(valor)}*`;
+            } else {
+                msg += `\n\n🛍️ *Valor da Parcela:* R$ ${formatMoney(valor)}`;
+            }
+
             msg += `\n\nQualquer dúvida ou se precisar da chave Pix, estou totalmente à disposição. Agradeço imensamente a preferência!`;
+
             const link = tel ? `https://wa.me/55${tel.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}` : null;
             if (link) window.open(link, '_blank'); else alert('Cliente sem WhatsApp salvo no sistema.');
         };
@@ -1050,7 +1068,6 @@
         };
 
         // ================= RECIBO (COMPARTILHAMENTO DE FOTO) =================
-        // ================= RECIBO (COMPARTILHAMENTO DE FOTO) =================
         window.abrirRecibo = (vId, vJson) => {
             const v = typeof vJson === 'string' ? JSON.parse(vJson) : vJson;
             const qtdParcelas = v.parcelas ? v.parcelas.length : 1;
@@ -1069,12 +1086,51 @@
             document.getElementById('recibo-total').innerText = `R$ ${formatMoney(v.total)}`;
 
             let parcHTML = ''; let tPago = 0; let tPendente = 0;
+
+            // Loop para processar parcelas e calcular juros/multa
             v.parcelas.forEach(p => {
-                const pgo = p.status === 'pago'; if (pgo) tPago += p.valor; else tPendente += p.valor;
+                const pgo = p.status === 'pago';
+                let valorExibir = parseFloat(p.valor);
+                let textoJuros = '';
+
+                if (pgo) {
+                    tPago += valorExibir;
+                } else {
+                    let statusP = calcularStatusPrazo(p.vencimento);
+                    if (statusP.atrasado && statusP.diasAtraso > 0) {
+                        const multa = 5.93;
+                        const juros = statusP.diasAtraso * 0.89;
+                        valorExibir += (multa + juros);
+                        textoJuros = `<br><span class="text-[9px] text-rose-500 font-bold leading-none uppercase">+ Juros/Multa (R$ ${formatMoney(multa + juros)})</span>`;
+                    }
+                    tPendente += valorExibir;
+                }
+
                 const badge = pgo ? '<span class="text-[9px] text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded uppercase font-black">PAGO</span>' : '<span class="text-[9px] text-rose-500 bg-rose-100 px-1.5 py-0.5 rounded uppercase font-black">PENDENTE</span>';
-                parcHTML += `<div class="flex justify-between items-center text-xs text-slate-600 dark:text-slate-400 font-bold py-1.5 border-b border-slate-100 dark:border-slate-800 last:border-0"><span>${p.numero}ª Parc (${p.vencimento})</span><div class="flex items-center gap-2"><span>R$ ${formatMoney(p.valor)}</span>${badge}</div></div>`;
+
+                parcHTML += `<div class="flex justify-between items-center text-xs text-slate-600 dark:text-slate-400 font-bold py-1.5 border-b border-slate-100 dark:border-slate-800 last:border-0">
+                    <div>
+                        <span>${p.numero}ª Parc (${p.vencimento})</span>
+                        ${textoJuros}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>R$ ${formatMoney(valorExibir)}</span>
+                        ${badge}
+                    </div>
+                </div>`;
             });
+
+            // Rodapé com os totais corrigidos
             parcHTML += `<div class="mt-2 pt-2 flex justify-between items-center"><span class="text-[10px] font-black text-emerald-600">JÁ PAGO: R$ ${formatMoney(tPago)}</span><span class="text-[10px] font-black text-rose-500">A RECEBER: R$ ${formatMoney(tPendente)}</span></div>`;
+
+            // Injeção do Aviso Legal no final do container de parcelas
+            parcHTML += `
+                <div class="mt-4 pt-3 border-t border-dashed border-slate-300 dark:border-slate-700 text-[9px] text-slate-500 dark:text-slate-400 text-center leading-relaxed">
+                    <strong>AVISO IMPORTANTE:</strong><br> 
+                    O pagamento após o vencimento está sujeito à incidência de multa por atraso no valor de <strong>R$ 5,93</strong>, acrescida de juros proporcionais de <strong>R$ 0,89</strong> por dia de atraso.
+                </div>
+            `;
+
             document.getElementById('recibo-parcelas-lista').innerHTML = parcHTML;
             document.getElementById('modal-recibo').classList.remove('hidden');
         };

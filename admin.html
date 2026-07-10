@@ -647,7 +647,16 @@
         window.saldoCarteira = 0;
         window.reciboAtualExport = null;
 
-        function formatMoney(val) { return parseFloat(val).toFixed(2).replace('.', ','); }
+        window.formatMoney = function (val) {
+            return Number(val).toFixed(2).replace('.', ',');
+        };
+
+        window.parseMoney = function (valorStr) {
+            if (!valorStr) return 0;
+            const num = Number(String(valorStr).replace(/[R$\s]/g, '').replace(',', '.'));
+            return isNaN(num) ? 0 : num;
+        };
+
         function parseDataBr(str) { const [d, m, y] = str.split('/'); return new Date(y, m - 1, d).getTime(); }
 
         window.toggleTheme = () => { document.documentElement.classList.toggle('dark'); };
@@ -753,6 +762,86 @@
             if (link) window.open(link, '_blank'); else alert('Cliente sem WhatsApp salvo no sistema.');
         };
 
+        window.verificarVencimentosNtfy = async (vendasSnap, faturasSnap) => {
+            const limiteDiasAviso = 3; // Quantos dias de antecedência para avisar
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+
+            // Controle de anti-spam: Verifica se já notificou hoje
+            const hojeStr = hoje.toISOString().split('T')[0];
+            const ultimaNotif = localStorage.getItem('ntfy_last_trigger');
+            if (ultimaNotif === hojeStr) return; // Se já disparou hoje, interrompe a função
+
+            let alertasClientes = [];
+            let alertasFaturas = [];
+
+            // 1. Mapear Faturas (Boticário)
+            faturasSnap.forEach(docSnap => {
+                const f = docSnap.data();
+                if (f.parcelas) {
+                    f.parcelas.forEach(p => {
+                        if (p.status !== 'pago') {
+                            const fData = new Date(parseDataBr(p.vencimento));
+                            const diffDias = Math.round((fData - hoje) / 86400000);
+
+                            if (diffDias <= limiteDiasAviso) {
+                                let statusText = diffDias < 0 ? `🔴 Vencido há ${Math.abs(diffDias)} dias` : (diffDias === 0 ? `🟡 Vence HOJE` : `🟢 Vence em ${diffDias} dias`);
+                                alertasFaturas.push(`- Fatura #${docSnap.id} (${p.numero}x): R$ ${formatMoney(p.valor)} (${statusText})`);
+                            }
+                        }
+                    });
+                }
+            });
+
+            // 2. Mapear Pedidos (Clientes)
+            vendasSnap.forEach(docSnap => {
+                const v = docSnap.data();
+                if (v.parcelas) {
+                    v.parcelas.forEach(p => {
+                        if (p.status === 'pendente') {
+                            const vData = new Date(parseDataBr(p.vencimento));
+                            const diffDias = Math.round((vData - hoje) / 86400000);
+
+                            if (diffDias <= limiteDiasAviso) {
+                                let statusText = diffDias < 0 ? `🔴 Vencido há ${Math.abs(diffDias)} dias` : (diffDias === 0 ? `🟡 Vence HOJE` : `🟢 Vence em ${diffDias} dias`);
+                                alertasClientes.push(`- ${v.nome_cliente.toUpperCase()}: R$ ${formatMoney(p.valor)} (${statusText})`);
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Se não houver nada a vencer/vencido, sai da função
+            if (alertasClientes.length === 0 && alertasFaturas.length === 0) return;
+
+            // 3. Montar a mensagem Markdown para o Ntfy
+            let msgNtfy = '';
+            if (alertasFaturas.length > 0) {
+                msgNtfy += `🏢 **FATURAS OBOTICÁRIO**\n${alertasFaturas.join('\n')}\n\n`;
+            }
+            if (alertasClientes.length > 0) {
+                msgNtfy += `🛍️ **COBRANÇAS CLIENTES**\n${alertasClientes.join('\n')}`;
+            }
+
+            // 4. Disparar a notificação
+            try {
+                await fetch('https://ntfy.sh/bto_cob_matheus', {
+                    method: 'POST',
+                    body: msgNtfy.trim(),
+                    headers: {
+                        'Title': '⚠️ Relatório de Vencimentos',
+                        'Tags': 'rotating_light,moneybag',
+                        'Markdown': 'yes'
+                    }
+                });
+
+                // Grava a data no navegador para não disparar novamente hoje
+                localStorage.setItem('ntfy_last_trigger', hojeStr);
+            } catch (e) {
+                console.error("Erro ao enviar Ntfy:", e);
+            }
+        };
+
         window.carregarBaseDados = async function () {
             try {
                 let totalReceber = 0; let totalPagar = 0; let qtdEstoque = 0;
@@ -767,6 +856,8 @@
                 const [vendasSnap, estoqueSnap, faturasSnap] = await Promise.all([
                     getDocs(collection(db, "vendas")), getDocs(collection(db, "estoque")), getDocs(collection(db, "faturas_boticario"))
                 ]);
+                // Aciona a verificação passando os dados recém-carregados
+                window.verificarVencimentosNtfy(vendasSnap, faturasSnap);
                 qtdEstoque = estoqueSnap.size;
 
                 let faturasHTML = '';
@@ -790,7 +881,7 @@
                 vendasSnap.forEach(docSnap => {
                     const v = docSnap.data();
                     const vId = docSnap.id;
-                    
+
                     let proximoVencimento = Infinity; // Padrão caso todas as parcelas estejam pagas (vai para o fim)
                     if (v.parcelas) {
                         v.parcelas.forEach(p => {
@@ -819,9 +910,21 @@
                     if (v.parcelas) {
                         v.parcelas.forEach((p, idx) => {
                             let statusP = calcularStatusPrazo(p.vencimento);
-                            let valorExibir = p.valor;
+                            let valorBase = window.parseMoney(p.valor); // Garante que é número
+                            let valorExibir = valorBase;
+                            let textoEncargos = '';
+
                             if (p.status === 'pendente') {
-                                if (statusP.atrasado) valorExibir = statusP.valor;
+                                // Se estiver atrasado, aplica a matemática correta
+                                if (statusP.atrasado && statusP.diasAtraso > 0) {
+                                    const multa = 5.93;
+                                    const juros = statusP.diasAtraso * 0.89;
+                                    valorExibir = valorBase + multa + juros;
+
+                                    // Renderiza o descritivo no DOM
+                                    textoEncargos = `<span class="text-[9px] text-rose-500 font-bold block mt-1 leading-none">+ Juros/Multa: R$ ${window.formatMoney(multa + juros)}</span>`;
+                                }
+
                                 totalReceber += valorExibir;
                                 listaVencimentos.push({ cliente: v.nome_cliente, num: p.numero, valorCobrar: valorExibir, dataStr: p.vencimento, timestamp: parseDataBr(p.vencimento), tel: v.telefone || '', dias: statusP.diasAtraso });
                             }
@@ -833,7 +936,8 @@
                             parcelasList += `
                                 <div class="flex justify-between items-center py-3 border-b border-slate-200 dark:border-slate-800 last:border-0">
                                     <div class="text-xs">
-                                        <span class="font-bold text-slate-800 dark:text-slate-200">${p.numero}x R$ ${formatMoney(valorExibir)}</span> <br>
+                                        <span class="font-bold text-slate-800 dark:text-slate-200">${p.numero}x R$ ${window.formatMoney(valorExibir)}</span>
+                                        ${textoEncargos}
                                         <div class="mt-1.5 flex items-center gap-2 flex-wrap">
                                             <span class="text-slate-500 dark:text-slate-400 font-medium">Venc: ${p.vencimento}</span>
                                             ${lblDias}
@@ -841,7 +945,7 @@
                                         </div>
                                     </div>
                                     <div class="text-right pl-2 shrink-0">
-                                        <button onclick="window.alternarPagamentoCliente('${vId}', ${idx}, '${p.status}', ${p.valor})" class="px-3 py-1.5 text-[10px] font-black uppercase rounded-lg shadow-sm transition-all ${btnColor}">
+                                        <button onclick="window.alternarPagamentoCliente('${vId}', ${idx}, '${p.status}', ${valorExibir})" class="px-3 py-1.5 text-[10px] font-black uppercase rounded-lg shadow-sm transition-all ${btnColor}">
                                             ${isPago ? 'Pago' : 'Pagar'}
                                         </button>
                                     </div>
@@ -945,6 +1049,7 @@
             }
         };
 
+        // ================= RECIBO (COMPARTILHAMENTO DE FOTO) =================
         // ================= RECIBO (COMPARTILHAMENTO DE FOTO) =================
         window.abrirRecibo = (vId, vJson) => {
             const v = typeof vJson === 'string' ? JSON.parse(vJson) : vJson;

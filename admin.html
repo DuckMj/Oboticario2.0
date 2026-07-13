@@ -795,17 +795,22 @@
             }
 
             // ==========================================
-            // FUTURO LINK DA PÁGINA DO CLIENTE
-            // Mude isso futuramente para o domínio real que você for usar.
-            // Lembre-se: O link precisa obrigatoriamente estar no fim da mensagem ou isolado para o WhatsApp puxar a imagem.
+            // LINK CORRETO DA PÁGINA DO CLIENTE
+            // Passando o telefone limpo (apenas números) como ID para o cliente.html ler depois.
             // ==========================================
-            const linkPaginaCliente = `https://seusite.com/cliente/${nome.replace(/\s+/g, '').toLowerCase()}`;
+            const idCliente = tel.replace(/\D/g, '');
+            const linkPaginaCliente = `https://duckmj.github.io/Oboticario2.0/cliente.html?id=${idCliente}`;
 
             msg += `\n\nVeja todos os detalhes e acesse sua área no link abaixo:\n${linkPaginaCliente}`;
             msg += `\n\nQualquer dúvida ou se precisar da chave Pix, estou à disposição!`;
 
-            const link = tel ? `https://wa.me/55${tel.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}` : null;
-            if (link) window.open(link, '_blank'); else alert('Cliente sem WhatsApp salvo no sistema.');
+            const link = tel ? `https://wa.me/55${idCliente}?text=${encodeURIComponent(msg)}` : null;
+
+            if (link) {
+                window.open(link, '_blank');
+            } else {
+                alert('Cliente sem WhatsApp salvo no sistema.');
+            }
         };
 
         window.verificarVencimentosNtfy = async (vendasSnap, faturasSnap) => {

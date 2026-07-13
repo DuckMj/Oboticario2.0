@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light"> <!-- Forçando modo claro por padrão -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Área do Cliente | O Boticário</title>
+
+    <!-- ======================================================= -->
+    <!-- TAGS OPEN GRAPH (PREVIEW DO WHATSAPP)                   -->
+    <!-- ======================================================= -->
+    <meta property="og:title" content="Sua Área do Cliente | O Boticário">
+    <meta property="og:description" content="Acesse o detalhamento do seu pedido, parcelas e valores atualizados.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://duckmj.github.io/Oboticario2.0/cliente.html">
+    <!-- Substitua pela imagem real que fará o preview no WhatsApp -->
+    <meta property="og:image" content="https://duckmj.github.io/Oboticario2.0/imagem-preview-whatsapp.png">
+    <!-- ======================================================= -->
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Permite alternar via botão
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#059669',
+                            dark: '#10b981',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* ANIMAÇÃO DE GLOW NO BACKGROUND */
+        .glow-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            background-color: #f8fafc; /* Fundo claro */
+            transition: background-color 0.4s ease;
+        }
+
+        .dark .glow-bg {
+            background-color: #020617; /* Fundo escuro */
+        }
+
+        .glow-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: floatGlow 20s infinite alternate ease-in-out;
+        }
+
+        .dark .glow-shape { opacity: 0.3; } /* Mais sutil no modo escuro */
+
+        .glow-1 {
+            top: -10%; left: -10%;
+            width: 50vw; height: 50vw;
+            min-width: 300px; min-height: 300px;
+            background: rgba(16, 185, 129, 0.4); /* Verde Esmeralda */
+            animation-delay: 0s;
+        }
+
+        .glow-2 {
+            bottom: -10%; right: -10%;
+            width: 60vw; height: 60vw;
+            min-width: 350px; min-height: 350px;
+            background: rgba(6, 182, 212, 0.3); /* Ciano */
+            animation-delay: -5s;
+            animation-direction: alternate-reverse;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10vw, 5vh) scale(1.1); }
+            100% { transform: translate(-5vw, 10vh) scale(0.9); }
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col relative">
+
+    <!-- BACKGROUND ANIMADO -->
+    <div class="glow-bg">
+        <div class="glow-shape glow-1"></div>
+        <div class="glow-shape glow-2"></div>
+    </div>
+
+    <!-- CABEÇALHO COM BOTÃO DE TEMA -->
+    <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 px-6 py-4 sticky top-0 z-10 shadow-sm">
+        <div class="flex items-center justify-between max-w-md mx-auto">
+            <div>
+                <h1 class="text-xl font-black tracking-tight text-brand-light dark:text-brand-dark">O BOTICÁRIO</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Área do Cliente</p>
+            </div>
+            
+            <button id="theme-toggle" class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                <!-- Ícone Sol (aparece no modo escuro) -->
+                <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <!-- Ícone Lua (aparece no modo claro) -->
+                <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-1 px-4 py-6 max-w-md mx-auto w-full space-y-6">
+        
+        <!-- SAUDAÇÃO -->
+        <div>
+            <h2 class="text-2xl font-black">Olá, <span id="ui-nome-cliente" class="uppercase text-brand-light dark:text-brand-dark">---</span>!</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Aqui está o resumo financeiro dos seus pedidos.</p>
+        </div>
+
+        <!-- CARD DE TOTAL A PAGAR -->
+        <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-3xl p-6 shadow-xl shadow-slate-200/50 dark:shadow-black/50 border border-white/50 dark:border-slate-800 relative overflow-hidden">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total em Aberto</p>
+            <h3 class="text-4xl font-black text-slate-800 dark:text-white tracking-tighter" id="ui-total-devedor">R$ 0,00</h3>
+            
+            <div class="mt-5 flex gap-2">
+                <button onclick="copiarChavePix()" class="flex-1 bg-brand-light hover:bg-emerald-700 text-white py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider transition-colors flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    Copiar Pix
+                </button>
+            </div>
+        </div>
+
+        <!-- LISTA DE PARCELAS -->
+        <div>
+            <h4 class="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <svg class="w-4 h-4 text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                Detalhamento de Parcelas
+            </h4>
+            <div id="ui-lista-parcelas" class="space-y-3">
+                <!-- Injetado via JS -->
+            </div>
+        </div>
+
+        <!-- AVISO LEGAL -->
+        <div class="text-[10px] text-slate-500 dark:text-slate-400 text-center leading-relaxed px-4 pb-8">
+            <strong>AVISO IMPORTANTE:</strong> O pagamento após o vencimento está sujeito à incidência de multa por atraso (R$ 5,93) acrescida de juros proporcionais (R$ 0,89/dia).
+        </div>
+
+    </main>
+
+    <script>
+        // ==========================================
+        // CONTROLE DE TEMA (CLARO/ESCURO)
+        // ==========================================
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        const updateThemeIcons = () => {
+            if (document.documentElement.classList.contains('dark')) {
+                darkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+            } else {
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        };
+
+        // Força tema claro se não houver preferência salva
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        updateThemeIcons();
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+            updateThemeIcons();
+        });
+
+        // ==========================================
+        // LÓGICA DE DADOS E RENDERIZAÇÃO
+        // ==========================================
+        const formatMoney = (val) => val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        const calcularStatusPrazo = (vencimentoStr) => {
+            const [dia, mes, ano] = vencimentoStr.split('/');
+            const dataVenc = new Date(ano, mes - 1, dia);
+            const hoje = new Date();
+            
+            hoje.setHours(0, 0, 0, 0);
+            dataVenc.setHours(0, 0, 0, 0);
+            
+            const diffTime = hoje - dataVenc;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            return {
+                atrasado: diffDays > 0,
+                diasAtraso: diffDays > 0 ? diffDays : 0
+            };
+        };
+
+        const renderizarDadosCliente = (dados) => {
+            document.getElementById('ui-nome-cliente').innerText = dados.nome;
+            
+            let htmlParcelas = '';
+            let totalAberto = 0;
+
+            dados.parcelas.forEach(p => {
+                const pago = p.status === 'pago';
+                let valorFinal = parseFloat(p.valor);
+                let detalheAtrasoHTML = '';
+                
+                // Estilos dinâmicos baseados no status
+                let corBorda = pago ? 'border-emerald-500/30' : 'border-slate-200 dark:border-slate-700';
+                let corFundo = pago ? 'bg-emerald-50/80 dark:bg-emerald-900/10' : 'bg-white/80 dark:bg-slate-900/80';
+                let opacidade = pago ? 'opacity-80' : 'opacity-100'; // Parcela paga fica levemente opaca
+                
+                let badge = pago 
+                    ? `<span class="text-[10px] bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 px-2 py-1 rounded-md font-black uppercase tracking-wider">Pago</span>`
+                    : `<span class="text-[10px] bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-400 px-2 py-1 rounded-md font-black uppercase tracking-wider">Pendente</span>`;
+
+                if (!pago) {
+                    const status = calcularStatusPrazo(p.vencimento);
+                    if (status.atrasado) {
+                        const multa = 5.93;
+                        const juros = status.diasAtraso * 0.89;
+                        valorFinal += (multa + juros);
+                        
+                        corBorda = 'border-rose-500/50';
+                        corFundo = 'bg-rose-50/80 dark:bg-rose-900/10';
+                        badge = `<span class="text-[10px] bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-400 px-2 py-1 rounded-md font-black uppercase tracking-wider">Atrasado ${status.diasAtraso}d</span>`;
+                        
+                        detalheAtrasoHTML = `
+                            <div class="mt-3 pt-3 border-t border-dashed border-rose-200 dark:border-rose-900/50 text-xs space-y-1">
+                                <div class="flex justify-between text-slate-500 dark:text-slate-400">
+                                    <span>Valor original:</span><span>R$ ${formatMoney(p.valor)}</span>
+                                </div>
+                                <div class="flex justify-between text-rose-600 dark:text-rose-400 font-bold">
+                                    <span>Multa + Juros:</span><span>+ R$ ${formatMoney(multa + juros)}</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    totalAberto += valorFinal;
+                }
+
+                htmlParcelas += `
+                    <div class="${corFundo} backdrop-blur-sm border ${corBorda} ${opacidade} rounded-2xl p-4 transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <span class="text-xs font-bold text-slate-400 block mb-1">Parcela ${p.numero} • Venc: ${p.vencimento}</span>
+                                <span class="text-lg font-black text-slate-800 dark:text-slate-100 ${pago ? 'line-through decoration-emerald-500/50' : ''}">
+                                    R$ ${formatMoney(valorFinal)}
+                                </span>
+                            </div>
+                            ${badge}
+                        </div>
+                        ${detalheAtrasoHTML}
+                    </div>
+                `;
+            });
+
+            document.getElementById('ui-lista-parcelas').innerHTML = htmlParcelas;
+            // Mostra a soma apenas do que está pendente (com multas aplicadas, se houver)
+            document.getElementById('ui-total-devedor').innerText = `R$ ${formatMoney(totalAberto)}`;
+        };
+
+        const copiarChavePix = () => {
+            const chave = "21920209132"; 
+            navigator.clipboard.writeText(chave).then(() => {
+                alert("Chave PIX copiada! Abra o app do seu banco.");
+            });
+        };
+
+        // ==========================================
+        // DADOS EXATOS BASEADOS NO SEU PAINEL (MOCK)
+        // ==========================================
+        const urlParams = new URLSearchParams(window.location.search);
+        const clientId = urlParams.get('id');
+
+        // Valores alinhados com o print do admin.
+        const mockDados = {
+            nome: "Aninha",
+            parcelas: [
+                { numero: 1, vencimento: "09/07/2026", valor: 170.60, status: "pago" },
+                { numero: 2, vencimento: "09/08/2026", valor: 170.60, status: "pendente" },
+                { numero: 3, vencimento: "09/09/2026", valor: 170.60, status: "pendente" }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarDadosCliente(mockDados);
+        });
+
+    </script>
+</body>
+</html>

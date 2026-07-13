@@ -26,32 +26,55 @@
     <style>
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f8fafc;
+            /* Base clara fixa */
+            color: #0f172a;
             transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Impede scroll lateral do glow */
+            z-index: 0;
         }
 
-        /* BACKGROUND ANIMADO SUTIL */
-        body {
-            background-size: 400% 400%;
-            animation: gradientBG 20s ease infinite;
-            background-image: linear-gradient(-45deg, #b3d8d0, #e5f3f0, #e2f0ec, #cdfff4);
+        /* GLOW ANIMADO NO MODO CLARO */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -25%;
+            left: -25%;
+            width: 150%;
+            height: 150%;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(circle at 30% 50%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(6, 182, 212, 0.12) 0%, transparent 50%);
+            animation: glowMove 15s ease-in-out infinite alternate;
         }
 
-        /* CORREÇÃO AQUI: Aplica o fundo se o HTML for .dark */
         .dark body {
-            background-image: linear-gradient(-45deg, #020617, #1c2335, #080b0f, #020617);
+            background-color: #020617;
+            /* Base escura fixa */
+            color: #f8fafc;
         }
 
-        @keyframes gradientBG {
+        /* GLOW ANIMADO NO MODO ESCURO */
+        .dark body::before {
+            background: radial-gradient(circle at 30% 50%, rgba(16, 185, 129, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(6, 182, 212, 0.18) 0%, transparent 50%);
+        }
+
+        @keyframes glowMove {
             0% {
-                background-position: 0% 50%;
+                transform: scale(1) translate(0, 0);
             }
 
             50% {
-                background-position: 100% 50%;
+                transform: scale(1.05) translate(2%, 3%);
             }
 
             100% {
-                background-position: 0% 50%;
+                transform: scale(1) translate(-2%, -2%);
             }
         }
 
@@ -101,7 +124,7 @@
             gap: 1rem;
         }
 
-        /* SCROLLBAR CUSTOMIZADA (ESCONDIDA NO MOBILE NAV) */
+        /* SCROLLBAR CUSTOMIZADA */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -760,9 +783,6 @@
             if (diasAtraso > 0) {
                 const multa = 5.93;
                 const juros = diasAtraso * 0.89;
-
-                // O valor que chega aqui JÁ É O TOTAL ATUALIZADO. 
-                // Portanto, o valor base real é o valor passado menos as taxas.
                 const valorBase = valor - multa - juros;
 
                 msg += `\n\n⚠️ *Atenção: Parcela em atraso (${diasAtraso} dias).*`;
@@ -774,7 +794,15 @@
                 msg += `\n\n🛍️ *Valor da Parcela:* R$ ${formatMoney(valor)}`;
             }
 
-            msg += `\n\nQualquer dúvida ou se precisar da chave Pix, estou totalmente à disposição. Agradeço imensamente a preferência!`;
+            // ==========================================
+            // FUTURO LINK DA PÁGINA DO CLIENTE
+            // Mude isso futuramente para o domínio real que você for usar.
+            // Lembre-se: O link precisa obrigatoriamente estar no fim da mensagem ou isolado para o WhatsApp puxar a imagem.
+            // ==========================================
+            const linkPaginaCliente = `https://seusite.com/cliente/${nome.replace(/\s+/g, '').toLowerCase()}`;
+
+            msg += `\n\nVeja todos os detalhes e acesse sua área no link abaixo:\n${linkPaginaCliente}`;
+            msg += `\n\nQualquer dúvida ou se precisar da chave Pix, estou à disposição!`;
 
             const link = tel ? `https://wa.me/55${tel.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}` : null;
             if (link) window.open(link, '_blank'); else alert('Cliente sem WhatsApp salvo no sistema.');

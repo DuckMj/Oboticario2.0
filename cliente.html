@@ -130,7 +130,6 @@
         // ==========================================
         // 1. CONFIGURAÇÃO E INICIALIZAÇÃO DO FIREBASE
         // ==========================================
-        // Cole aqui exatamente o seu objeto firebaseConfig do painel administrativo principal
         const firebaseConfig = {
             apiKey: "AIzaSyCi03g667vB1uOT1zsuDc1AkiyQ1b8o0GQ",
             authDomain: "oboticario-e8369.firebaseapp.com",
@@ -176,10 +175,23 @@
         // ==========================================
         // LÓGICA DE TRATAMENTO DE VALORES E INTERFACE
         // ==========================================
-        const formatMoney = (val) => val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const formatMoney = (val) => {
+            const num = parseFloat(val);
+            return isNaN(num) ? "0,00" : num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        };
 
         const calcularStatusPrazo = (vencimentoStr) => {
-            const [dia, mes, ano] = vencimentoStr.split('/');
+            if (!vencimentoStr) return { atrasado: false, diasAtraso: 0 };
+            
+            let dia, mes, ano;
+            if (vencimentoStr.includes('/')) {
+                [dia, mes, ano] = vencimentoStr.split('/');
+            } else if (vencimentoStr.includes('-')) {
+                [ano, mes, dia] = vencimentoStr.split('-');
+            } else {
+                return { atrasado: false, diasAtraso: 0 };
+            }
+
             const dataVenc = new Date(ano, mes - 1, dia);
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
@@ -192,20 +204,26 @@
         };
 
         const renderizarDadosCliente = (dados) => {
-            document.getElementById('ui-nome-cliente').innerText = dados.nome;
+            // CORREÇÃO AQUI: Mapeando a chave exata 'nome_cliente' vinda do seu Firestore
+            document.getElementById('ui-nome-cliente').innerText = dados.nome_cliente || dados.nome || dados.cliente || "Cliente";
             
             let htmlParcelas = '';
             let totalAberto = 0;
 
-            if (!dados.parcelas || dados.parcelas.length === 0) {
-                document.getElementById('ui-lista-parcelas').innerHTML = `<p class="text-center text-sm text-slate-400">Nenhuma parcela ativa.</p>`;
+            const listaParcelas = dados.parcelas || dados.Parcelas || [];
+
+            if (listaParcelas.length === 0) {
+                document.getElementById('ui-lista-parcelas').innerHTML = `<p class="text-center text-sm text-slate-400">Nenhuma parcela cadastrada.</p>`;
                 document.getElementById('ui-total-devedor').innerText = "R$ 0,00";
                 return;
             }
 
-            dados.parcelas.forEach(p => {
-                const pago = p.status === 'pago' || p.status === 'recebido';
-                let valorFinal = parseFloat(p.valor);
+            listaParcelas.forEach(p => {
+                const statusNormalizado = (p.status || p.Status || '').toLowerCase();
+                const pago = statusNormalizado === 'pago' || statusNormalizado === 'recebido';
+                
+                let valorOriginal = parseFloat(p.valor || p.Valor || 0);
+                let valorFinal = valorOriginal;
                 let detalheAtrasoHTML = '';
                 
                 let corBorda = pago ? 'border-emerald-500/30' : 'border-slate-200 dark:border-slate-700';
@@ -217,7 +235,8 @@
                     : `<span class="text-[10px] bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-400 px-2 py-1 rounded-md font-black uppercase tracking-wider">Pendente</span>`;
 
                 if (!pago) {
-                    const status = calcularStatusPrazo(p.vencimento);
+                    const vencimento = p.vencimento || p.Vencimento || '';
+                    const status = calcularStatusPrazo(vencimento);
                     if (status.atrasado) {
                         const multa = 5.93;
                         const juros = status.diasAtraso * 0.89;
@@ -230,7 +249,7 @@
                         detalheAtrasoHTML = `
                             <div class="mt-3 pt-3 border-t border-dashed border-rose-200 dark:border-rose-900/50 text-xs space-y-1">
                                 <div class="flex justify-between text-slate-500 dark:text-slate-400">
-                                    <span>Valor original:</span><span>R$ ${formatMoney(parseFloat(p.valor))}</span>
+                                    <span>Valor original:</span><span>R$ ${formatMoney(valorOriginal)}</span>
                                 </div>
                                 <div class="flex justify-between text-rose-600 dark:text-rose-400 font-bold">
                                     <span>Multa + Juros:</span><span>+ R$ ${formatMoney(multa + juros)}</span>
@@ -241,11 +260,14 @@
                     totalAberto += valorFinal;
                 }
 
+                const numParcela = p.numero || p.Numero || p.id || '';
+                const dataVencimentoDisplay = p.vencimento || p.Vencimento || '--/--/----';
+
                 htmlParcelas += `
                     <div class="${corFundo} backdrop-blur-sm border ${corBorda} ${opacidade} rounded-2xl p-4 transition-colors">
                         <div class="flex justify-between items-start mb-2">
                             <div>
-                                <span class="text-xs font-bold text-slate-400 block mb-1">Parcela ${p.numero || p.id || ''} • Venc: ${p.vencimento}</span>
+                                <span class="text-xs font-bold text-slate-400 block mb-1">Parcela ${numParcela} • Venc: ${dataVencimentoDisplay}</span>
                                 <span class="text-lg font-black text-slate-800 dark:text-slate-100 ${pago ? 'line-through decoration-emerald-500/50' : ''}">
                                     R$ ${formatMoney(valorFinal)}
                                 </span>
@@ -272,39 +294,53 @@
         };
 
         const copiarChavePix = () => {
-            const chave = "suachave@pix.com.br"; // Altere para sua chave PIX real
+            const chave = "suachave@pix.com.br"; 
             navigator.clipboard.writeText(chave).then(() => {
                 alert("Chave PIX copiada! Abra o app do seu banco.");
             });
         };
 
         // ==========================================
-        // EXECUÇÃO DA BUSCA DINÂMICA (FIREBASE)
+        // MOTOR DE BUSCA INTELIGENTE
         // ==========================================
         const urlParams = new URLSearchParams(window.location.search);
         const clientId = urlParams.get('id');
 
         document.addEventListener('DOMContentLoaded', async () => {
             if (!clientId) {
-                mostrarTelaErro("Link inválido. Identificador do cliente ausente.");
+                mostrarTelaErro("Link inválido ou parâmetros corrompidos.");
                 return;
             }
 
             try {
-                // Realiza a busca direta no documento do banco de dados pelo ID (Telefone)
-                // NOTA: Ajuste o nome da coleção ('clientes') se no seu banco estiver diferente (ex: 'vendas')
-                const docRef = db.collection('clientes').doc(clientId);
+                const colecaoAlvo = 'vendas'; 
+
+                // TENTATIVA 1: Verifica por ID de documento direto
+                const docRef = db.collection(colecaoAlvo).doc(clientId);
                 const docSnap = await docRef.get();
 
                 if (docSnap.exists) {
-                    const dadosCliente = docSnap.data();
+                    renderizarDadosCliente(docSnap.data());
+                    return; 
+                }
+
+                // TENTATIVA 2: Varre o campo 'telefone' interno caso o ID seja a hash gerada pelo Firestore
+                let querySnapshot = await db.collection(colecaoAlvo).where('telefone', '==', clientId).get();
+                
+                if (querySnapshot.empty) {
+                    querySnapshot = await db.collection(colecaoAlvo).where('tel', '==', clientId).get();
+                }
+
+                if (!querySnapshot.empty) {
+                    const dadosCliente = querySnapshot.docs[0].data();
                     renderizarDadosCliente(dadosCliente);
                 } else {
-                    mostrarTelaErro("Nenhum registro encontrado para este link.");
+                    mostrarTelaErro(`Nenhum pedido localizado para o identificador ${clientId}. Verifique se o registro existe no painel admin.`);
                 }
+
             } catch (error) {
-                console.error("Erro na requisição Firestore: ", error);
-                mostrarTelaErro("Falha de conexão ao carregar dados.");
+                console.error("Erro crítico na execução do Firestore: ", error);
+                mostrarTelaErro("Erro de comunicação com o banco de dados. Atualize a página.");
             }
         });
     </script>

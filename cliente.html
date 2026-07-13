@@ -144,7 +144,9 @@
             appId: "1:1049718432679:web:94a2a574729fddd4750c82"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.firestore();
 
         // ==========================================
@@ -178,11 +180,25 @@
         });
 
         // ==========================================
-        // LÓGICA DE TRATAMENTO DE VALORES E INTERFACE
+        // LÓGICA DE TRATAMENTO DE VALORES E TEMPO
         // ==========================================
         const formatMoney = (val) => {
             const num = parseFloat(val);
             return isNaN(num) ? "0,00" : num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        };
+
+        const extrairTimestampParaOrdenacao = (vencimentoStr) => {
+            if (!vencimentoStr) return new Date(9999, 11, 31).getTime(); // Se não tem data, joga pro fim
+            let dia, mes, ano;
+            if (vencimentoStr.includes('/')) {
+                [dia, mes, ano] = vencimentoStr.split('/');
+            } else if (vencimentoStr.includes('-')) {
+                [ano, mes, dia] = vencimentoStr.split('-');
+                if (dia.includes('T')) dia = dia.split('T')[0]; // Trata strings ISO
+            } else {
+                return new Date(9999, 11, 31).getTime();
+            }
+            return new Date(ano, mes - 1, dia).getTime();
         };
 
         const calcularStatusPrazo = (vencimentoStr) => {
@@ -193,6 +209,7 @@
                 [dia, mes, ano] = vencimentoStr.split('/');
             } else if (vencimentoStr.includes('-')) {
                 [ano, mes, dia] = vencimentoStr.split('-');
+                if (dia.includes('T')) dia = dia.split('T')[0];
             } else {
                 return { atrasado: false, diasAtraso: 0 };
             }
@@ -208,88 +225,163 @@
             return { atrasado: diffDays > 0, diasAtraso: diffDays > 0 ? diffDays : 0 };
         };
 
-        const renderizarDadosCliente = (dados) => {
-            // CORREÇÃO AQUI: Mapeando a chave exata 'nome_cliente' vinda do seu Firestore
-            document.getElementById('ui-nome-cliente').innerText = dados.nome_cliente || dados.nome || dados.cliente || "Cliente";
+        // ==========================================
+        // RENDERIZAÇÃO MULTI-PEDIDOS E ACORDEÃO
+        // ==========================================
+        const renderizarPedidos = (pedidosArray) => {
+            // Mapeia o nome usando o primeiro pedido do array
+            const primeiroPedido = pedidosArray[0];
+            document.getElementById('ui-nome-cliente').innerText = primeiroPedido.nome_cliente || primeiroPedido.nome || primeiroPedido.cliente || "Cliente";
             
-            let htmlParcelas = '';
-            let totalAberto = 0;
+            let globalTotalAberto = 0;
+            let htmlPedidos = '';
 
-            const listaParcelas = dados.parcelas || dados.Parcelas || [];
+            // 1. Prepara e analisa a urgência de cada pedido para ordenação
+            const pedidosProcessados = pedidosArray.map(pedido => {
+                const parcelas = pedido.parcelas || pedido.Parcelas || [];
+                let urgenciaReal = Infinity; // Quanto menor, mais urgente (data mais próxima)
+                let temPendente = false;
 
-            if (listaParcelas.length === 0) {
-                document.getElementById('ui-lista-parcelas').innerHTML = `<p class="text-center text-sm text-slate-400">Nenhuma parcela cadastrada.</p>`;
-                document.getElementById('ui-total-devedor').innerText = "R$ 0,00";
-                return;
-            }
-
-            listaParcelas.forEach(p => {
-                const statusNormalizado = (p.status || p.Status || '').toLowerCase();
-                const pago = statusNormalizado === 'pago' || statusNormalizado === 'recebido';
-                
-                let valorOriginal = parseFloat(p.valor || p.Valor || 0);
-                let valorFinal = valorOriginal;
-                let detalheAtrasoHTML = '';
-                
-                let corBorda = pago ? 'border-emerald-500/30' : 'border-slate-200 dark:border-slate-700';
-                let corFundo = pago ? 'bg-emerald-50/80 dark:bg-emerald-900/10' : 'bg-white/80 dark:bg-slate-900/80';
-                let opacidade = pago ? 'opacity-70' : 'opacity-100';
-                
-                let badge = pago 
-                    ? `<span class="text-[10px] bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 px-2 py-1 rounded-md font-black uppercase tracking-wider">Pago</span>`
-                    : `<span class="text-[10px] bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-400 px-2 py-1 rounded-md font-black uppercase tracking-wider">Pendente</span>`;
-
-                if (!pago) {
-                    const vencimento = p.vencimento || p.Vencimento || '';
-                    const status = calcularStatusPrazo(vencimento);
-                    if (status.atrasado) {
-                        const multa = 5.93;
-                        const juros = status.diasAtraso * 0.89;
-                        valorFinal += (multa + juros);
-                        
-                        corBorda = 'border-rose-500/50';
-                        corFundo = 'bg-rose-50/80 dark:bg-rose-900/10';
-                        badge = `<span class="text-[10px] bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-400 px-2 py-1 rounded-md font-black uppercase tracking-wider">Atrasado ${status.diasAtraso}d</span>`;
-                        
-                        detalheAtrasoHTML = `
-                            <div class="mt-3 pt-3 border-t border-dashed border-rose-200 dark:border-rose-900/50 text-xs space-y-1">
-                                <div class="flex justify-between text-slate-500 dark:text-slate-400">
-                                    <span>Valor original:</span><span>R$ ${formatMoney(valorOriginal)}</span>
-                                </div>
-                                <div class="flex justify-between text-rose-600 dark:text-rose-400 font-bold">
-                                    <span>Multa + Juros:</span><span>+ R$ ${formatMoney(multa + juros)}</span>
-                                </div>
-                            </div>
-                        `;
+                parcelas.forEach(p => {
+                    const statusNormalizado = (p.status || p.Status || '').toLowerCase();
+                    const isPago = statusNormalizado === 'pago' || statusNormalizado === 'recebido';
+                    
+                    if (!isPago) {
+                        temPendente = true;
+                        const dataMs = extrairTimestampParaOrdenacao(p.vencimento || p.Vencimento);
+                        if (dataMs < urgenciaReal) urgenciaReal = dataMs;
                     }
-                    totalAberto += valorFinal;
+                });
+
+                // Pedidos sem parcelas pendentes são empurrados para o final da lista (Infinity)
+                pedido.urgencia = temPendente ? urgenciaReal : Infinity;
+                pedido.statusGeral = temPendente ? 'pendente' : 'pago';
+                return pedido;
+            });
+
+            // 2. Ordena: Menor data pendente primeiro
+            pedidosProcessados.sort((a, b) => a.urgencia - b.urgencia);
+
+            // 3. Monta o HTML Acordeão
+            pedidosProcessados.forEach((pedido, index) => {
+                const listaParcelas = pedido.parcelas || pedido.Parcelas || [];
+                const idExibicao = pedido.numero_pedido || pedido.id || `Ref. ${index + 1}`;
+                
+                let htmlParcelasDetalhe = '';
+                let totalDevidoDoPedido = 0;
+                let qtdeParcelasAtrasadas = 0;
+
+                listaParcelas.forEach(p => {
+                    const statusNormalizado = (p.status || p.Status || '').toLowerCase();
+                    const pago = statusNormalizado === 'pago' || statusNormalizado === 'recebido';
+                    
+                    let valorOriginal = parseFloat(p.valor || p.Valor || 0);
+                    let valorFinal = valorOriginal;
+                    let detalheAtrasoHTML = '';
+                    
+                    let corBorda = pago ? 'border-emerald-500/30' : 'border-slate-200 dark:border-slate-700';
+                    let corFundo = pago ? 'bg-emerald-50/50 dark:bg-emerald-900/10' : 'bg-white/80 dark:bg-slate-900/80';
+                    let opacidade = pago ? 'opacity-60' : 'opacity-100';
+                    
+                    let badge = pago 
+                        ? `<span class="text-[10px] bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 px-2 py-1 rounded-md font-black uppercase tracking-wider">Pago</span>`
+                        : `<span class="text-[10px] bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-400 px-2 py-1 rounded-md font-black uppercase tracking-wider">Pendente</span>`;
+
+                    if (!pago) {
+                        const vencimento = p.vencimento || p.Vencimento || '';
+                        const status = calcularStatusPrazo(vencimento);
+                        
+                        if (status.atrasado) {
+                            qtdeParcelasAtrasadas++;
+                            const multa = 5.93;
+                            const juros = status.diasAtraso * 0.89;
+                            valorFinal += (multa + juros);
+                            
+                            corBorda = 'border-rose-500/50';
+                            corFundo = 'bg-rose-50/80 dark:bg-rose-900/10';
+                            badge = `<span class="text-[10px] bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-400 px-2 py-1 rounded-md font-black uppercase tracking-wider">Atrasado ${status.diasAtraso}d</span>`;
+                            
+                            detalheAtrasoHTML = `
+                                <div class="mt-2 pt-2 border-t border-dashed border-rose-200 dark:border-rose-900/50 text-xs space-y-1">
+                                    <div class="flex justify-between text-slate-500 dark:text-slate-400">
+                                        <span>Valor original:</span><span>R$ ${formatMoney(valorOriginal)}</span>
+                                    </div>
+                                    <div class="flex justify-between text-rose-600 dark:text-rose-400 font-bold">
+                                        <span>Multa + Juros:</span><span>+ R$ ${formatMoney(multa + juros)}</span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        totalDevidoDoPedido += valorFinal;
+                        globalTotalAberto += valorFinal;
+                    }
+
+                    const numParcela = p.numero || p.Numero || '';
+                    const dataVencimentoDisplay = p.vencimento || p.Vencimento || '--/--/----';
+
+                    htmlParcelasDetalhe += `
+                        <div class="${corFundo} border ${corBorda} ${opacidade} rounded-xl p-3 transition-colors">
+                            <div class="flex justify-between items-start mb-1">
+                                <div>
+                                    <span class="text-xs font-bold text-slate-400 block">Parcela ${numParcela} • Venc: ${dataVencimentoDisplay}</span>
+                                    <span class="text-md font-black text-slate-800 dark:text-slate-100 ${pago ? 'line-through decoration-emerald-500/50' : ''}">
+                                        R$ ${formatMoney(valorFinal)}
+                                    </span>
+                                </div>
+                                ${badge}
+                            </div>
+                            ${detalheAtrasoHTML}
+                        </div>
+                    `;
+                });
+
+                if (listaParcelas.length === 0) {
+                    htmlParcelasDetalhe = `<p class="text-center text-xs text-slate-400">Nenhuma parcela localizada neste pedido.</p>`;
                 }
 
-                const numParcela = p.numero || p.Numero || p.id || '';
-                const dataVencimentoDisplay = p.vencimento || p.Vencimento || '--/--/----';
+                // Header do Acordeão do Pedido
+                let corHeader = pedido.statusGeral === 'pago' ? 'border-emerald-500/20 bg-emerald-50/30 dark:bg-emerald-900/5 opacity-70' : 'border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80';
+                if (qtdeParcelasAtrasadas > 0) corHeader = 'border-rose-500/50 bg-rose-50/50 dark:bg-rose-900/10';
 
-                htmlParcelas += `
-                    <div class="${corFundo} backdrop-blur-sm border ${corBorda} ${opacidade} rounded-2xl p-4 transition-colors">
-                        <div class="flex justify-between items-start mb-2">
+                let badgePedido = pedido.statusGeral === 'pago' 
+                    ? `<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Quitado</span>`
+                    : (qtdeParcelasAtrasadas > 0 ? `<span class="text-xs font-bold text-rose-600 dark:text-rose-400">Restam R$ ${formatMoney(totalDevidoDoPedido)}</span>` : `<span class="text-xs font-bold text-amber-600 dark:text-amber-400">Restam R$ ${formatMoney(totalDevidoDoPedido)}</span>`);
+
+                htmlPedidos += `
+                    <div class="mb-3 backdrop-blur-sm border ${corHeader} rounded-2xl overflow-hidden transition-all duration-300">
+                        <!-- HEADER CLICÁVEL -->
+                        <div class="p-4 cursor-pointer flex justify-between items-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" 
+                             onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.seta').classList.toggle('rotate-180');">
                             <div>
-                                <span class="text-xs font-bold text-slate-400 block mb-1">Parcela ${numParcela} • Venc: ${dataVencimentoDisplay}</span>
-                                <span class="text-lg font-black text-slate-800 dark:text-slate-100 ${pago ? 'line-through decoration-emerald-500/50' : ''}">
-                                    R$ ${formatMoney(valorFinal)}
-                                </span>
+                                <h3 class="font-black text-slate-800 dark:text-slate-100 text-sm">Pedido #${idExibicao}</h3>
+                                ${badgePedido}
                             </div>
-                            ${badge}
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-slate-400 font-medium">VER PARCELAS</span>
+                                <svg class="seta w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        ${detalheAtrasoHTML}
+                        
+                        <!-- CORPO EXPANSÍVEL (OCULTO POR PADRÃO) -->
+                        <div class="hidden border-t border-slate-100 dark:border-slate-800/50 p-3 space-y-2 bg-slate-50/50 dark:bg-slate-900/30">
+                            ${htmlParcelasDetalhe}
+                        </div>
                     </div>
                 `;
             });
 
-            document.getElementById('ui-lista-parcelas').innerHTML = htmlParcelas;
-            document.getElementById('ui-total-devedor').innerText = `R$ ${formatMoney(totalAberto)}`;
+            if (pedidosProcessados.length === 0) {
+                htmlPedidos = `<p class="text-center text-sm text-slate-400 py-4">Nenhum pedido localizado.</p>`;
+            }
+
+            document.getElementById('ui-lista-parcelas').innerHTML = htmlPedidos;
+            document.getElementById('ui-total-devedor').innerText = `R$ ${formatMoney(globalTotalAberto)}`;
         };
 
         const mostrarTelaErro = (msg) => {
-            document.getElementById('ui-nome-cliente').innerText = "Erro";
+            document.getElementById('ui-nome-cliente').innerText = "Erro de Consulta";
             document.getElementById('ui-total-devedor').innerText = "R$ --";
             document.getElementById('ui-lista-parcelas').innerHTML = `
                 <div class="bg-rose-50 dark:bg-rose-900/10 border border-rose-500/30 rounded-2xl p-4 text-center text-sm text-rose-600 dark:text-rose-400 font-bold">
@@ -306,7 +398,7 @@
         };
 
         // ==========================================
-        // MOTOR DE BUSCA INTELIGENTE
+        // MOTOR DE BUSCA EM MASSA
         // ==========================================
         const urlParams = new URLSearchParams(window.location.search);
         const clientId = urlParams.get('id');
@@ -319,33 +411,36 @@
 
             try {
                 const colecaoAlvo = 'vendas'; 
+                let todosPedidosDoCliente = [];
 
-                // TENTATIVA 1: Verifica por ID de documento direto
-                const docRef = db.collection(colecaoAlvo).doc(clientId);
-                const docSnap = await docRef.get();
-
-                if (docSnap.exists) {
-                    renderizarDadosCliente(docSnap.data());
-                    return; 
-                }
-
-                // TENTATIVA 2: Varre o campo 'telefone' interno caso o ID seja a hash gerada pelo Firestore
+                // TENTATIVA 1: Busca baseada no campo 'telefone' para coletar MÚLTIPLOS documentos
                 let querySnapshot = await db.collection(colecaoAlvo).where('telefone', '==', clientId).get();
                 
                 if (querySnapshot.empty) {
+                    // Fallback para o campo abreviado 'tel'
                     querySnapshot = await db.collection(colecaoAlvo).where('tel', '==', clientId).get();
                 }
 
                 if (!querySnapshot.empty) {
-                    const dadosCliente = querySnapshot.docs[0].data();
-                    renderizarDadosCliente(dadosCliente);
+                    querySnapshot.forEach(doc => {
+                        todosPedidosDoCliente.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderizarPedidos(todosPedidosDoCliente);
                 } else {
-                    mostrarTelaErro(`Nenhum pedido localizado para o identificador ${clientId}. Verifique se o registro existe no painel admin.`);
+                    // TENTATIVA 2: Busca por ID Direto do Documento (caso o parâmetro na URL seja o ID do Firebase ao invés do telefone)
+                    const docRef = db.collection(colecaoAlvo).doc(clientId);
+                    const docSnap = await docRef.get();
+
+                    if (docSnap.exists) {
+                        renderizarPedidos([{ id: docSnap.id, ...docSnap.data() }]);
+                    } else {
+                        mostrarTelaErro(`Nenhum pedido localizado no sistema para o identificador: ${clientId}.`);
+                    }
                 }
 
             } catch (error) {
                 console.error("Erro crítico na execução do Firestore: ", error);
-                mostrarTelaErro("Erro de comunicação com o banco de dados. Atualize a página.");
+                mostrarTelaErro("Erro de comunicação com o banco de dados. Atualize a página e tente novamente.");
             }
         });
     </script>

@@ -397,8 +397,10 @@
             });
         };
 
+
+
         // ==========================================
-        // MOTOR DE BUSCA EM MASSA
+        // MOTOR DE BUSCA EM MASSA COM SANITIZAÇÃO
         // ==========================================
         const urlParams = new URLSearchParams(window.location.search);
         const clientId = urlParams.get('id');
@@ -413,29 +415,26 @@
                 const colecaoAlvo = 'vendas'; 
                 let todosPedidosDoCliente = [];
 
-                // TENTATIVA 1: Busca baseada no campo 'telefone' para coletar MÚLTIPLOS documentos
-                let querySnapshot = await db.collection(colecaoAlvo).where('telefone', '==', clientId).get();
+                // Coleta todos os documentos da coleção para fazer o bypass da formatação do telefone
+                const querySnapshot = await db.collection(colecaoAlvo).get();
                 
-                if (querySnapshot.empty) {
-                    // Fallback para o campo abreviado 'tel'
-                    querySnapshot = await db.collection(colecaoAlvo).where('tel', '==', clientId).get();
-                }
+                querySnapshot.forEach(doc => {
+                    const dados = doc.data();
+                    const telOriginal = dados.telefone || dados.tel || '';
+                    
+                    // Limpa qualquer parêntese, traço ou espaço que o Firebase tenha recebido
+                    const telLimpo = telOriginal.replace(/\D/g, ''); 
+                    
+                    // Compara com o ID numérico puro vindo da URL
+                    if (telLimpo === clientId) {
+                        todosPedidosDoCliente.push({ id: doc.id, ...dados });
+                    }
+                });
 
-                if (!querySnapshot.empty) {
-                    querySnapshot.forEach(doc => {
-                        todosPedidosDoCliente.push({ id: doc.id, ...doc.data() });
-                    });
+                if (todosPedidosDoCliente.length > 0) {
                     renderizarPedidos(todosPedidosDoCliente);
                 } else {
-                    // TENTATIVA 2: Busca por ID Direto do Documento (caso o parâmetro na URL seja o ID do Firebase ao invés do telefone)
-                    const docRef = db.collection(colecaoAlvo).doc(clientId);
-                    const docSnap = await docRef.get();
-
-                    if (docSnap.exists) {
-                        renderizarPedidos([{ id: docSnap.id, ...docSnap.data() }]);
-                    } else {
-                        mostrarTelaErro(`Nenhum pedido localizado no sistema para o identificador: ${clientId}.`);
-                    }
+                    mostrarTelaErro(`Nenhum pedido localizado no sistema para o identificador: ${clientId}.`);
                 }
 
             } catch (error) {
@@ -443,6 +442,7 @@
                 mostrarTelaErro("Erro de comunicação com o banco de dados. Atualize a página e tente novamente.");
             }
         });
+
     </script>
 </body>
 </html>

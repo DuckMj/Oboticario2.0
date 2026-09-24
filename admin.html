@@ -27,13 +27,11 @@
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: #f8fafc;
-            /* Base clara fixa */
             color: #0f172a;
             transition: background-color 0.3s ease, color 0.3s ease;
             position: relative;
             min-height: 100vh;
             overflow-x: hidden;
-            /* Impede scroll lateral do glow */
             z-index: 0;
         }
 
@@ -54,7 +52,6 @@
 
         .dark body {
             background-color: #020617;
-            /* Base escura fixa */
             color: #f8fafc;
         }
 
@@ -65,17 +62,9 @@
         }
 
         @keyframes glowMove {
-            0% {
-                transform: scale(1) translate(0, 0);
-            }
-
-            50% {
-                transform: scale(1.05) translate(2%, 3%);
-            }
-
-            100% {
-                transform: scale(1) translate(-2%, -2%);
-            }
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.05) translate(2%, 3%); }
+            100% { transform: scale(1) translate(-2%, -2%); }
         }
 
         .view-section {
@@ -90,193 +79,93 @@
         }
 
         /* MODO EDIÇÃO - FORÇANDO OCULTAÇÃO */
-        .edit-action {
-            display: none !important;
-        }
-
-        .edit-mode-active .edit-action {
-            display: flex !important;
-            animation: fadeIn 0.3s ease;
-        }
+        .edit-action { display: none !important; }
+        .edit-mode-active .edit-action { display: flex !important; animation: fadeIn 0.3s ease; }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         /* LAYOUTS LISTA E GRID */
-        .layout-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .layout-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+        .layout-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+        .layout-list { display: flex; flex-direction: column; gap: 1rem; }
 
         /* SCROLLBAR CUSTOMIZADA */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-
-        .dark ::-webkit-scrollbar-thumb {
-            background: #334155;
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 
 <body class="h-screen flex flex-col md:flex-row overflow-hidden text-slate-900 dark:text-slate-100">
 
-    <header
-        class="md:hidden order-1 h-[64px] flex items-center justify-between px-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 shrink-0 z-30 transition-colors">
+    <header class="md:hidden order-1 h-[64px] flex items-center justify-between px-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 shrink-0 z-30 transition-colors">
         <div class="flex items-center gap-3">
-            <div
-                class="w-8 h-8 rounded-lg bg-brand-light text-white flex items-center justify-center font-black shadow-md">
-                OB</div>
-            <span class="font-black text-brand-light tracking-tight text-lg">OBoticário<span
-                    class="font-light text-slate-400">OS</span></span>
+            <div class="w-8 h-8 rounded-lg bg-brand-light text-white flex items-center justify-center font-black shadow-md">OB</div>
+            <span class="font-black text-brand-light tracking-tight text-lg">OBoticário<span class="font-light text-slate-400">OS</span></span>
         </div>
-        <button onclick="window.toggleTheme()"
-            class="p-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+        <button onclick="window.toggleTheme()" class="p-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
             <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
             </svg>
             <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
-                </path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
             </svg>
         </button>
     </header>
 
-    <aside
-        class="order-3 md:order-1 z-40 w-full md:w-[76px] md:hover:w-64 h-[70px] md:h-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t md:border-t-0 md:border-r border-slate-200 dark:border-slate-800 transition-all duration-300 group flex flex-row md:flex-col shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.05)] md:shadow-lg overflow-visible md:overflow-hidden shrink-0">
-
+    <aside class="order-3 md:order-1 z-40 w-full md:w-[76px] md:hover:w-64 h-[70px] md:h-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t md:border-t-0 md:border-r border-slate-200 dark:border-slate-800 transition-all duration-300 group flex flex-row md:flex-col shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.05)] md:shadow-lg overflow-visible md:overflow-hidden shrink-0">
         <div class="hidden md:flex h-[72px] items-center px-4 border-b border-slate-200 dark:border-slate-800 shrink-0">
-            <div
-                class="w-10 h-10 rounded-xl bg-brand-light text-white flex items-center justify-center font-black shrink-0 shadow-md">
-                OB</div>
-            <span
-                class="ml-4 font-black text-brand-light tracking-tight text-xl hidden group-hover:md:block whitespace-nowrap">OBoticário<span
-                    class="font-light text-slate-400">OS</span></span>
+            <div class="w-10 h-10 rounded-xl bg-brand-light text-white flex items-center justify-center font-black shrink-0 shadow-md">OB</div>
+            <span class="ml-4 font-black text-brand-light tracking-tight text-xl hidden group-hover:md:block whitespace-nowrap">OBoticário<span class="font-light text-slate-400">OS</span></span>
         </div>
 
-        <nav
-            class="flex-1 flex flex-row md:flex-col justify-around md:justify-start px-2 md:px-3 py-2 md:py-4 gap-1 md:gap-2 overflow-x-auto md:overflow-y-auto no-scrollbar">
-
-            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item nav-active"
-                onclick="window.navigate('dashboard', this)">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                    </path>
-                </svg>
+        <nav class="flex-1 flex flex-row md:flex-col justify-around md:justify-start px-2 md:px-3 py-2 md:py-4 gap-1 md:gap-2 overflow-x-auto md:overflow-y-auto no-scrollbar">
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item nav-active" onclick="window.navigate('dashboard', this)">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Painel</span>
-                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Visão
-                    Geral</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Visão Geral</span>
             </div>
 
-            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
-                onclick="window.navigate('importar', this)">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                </svg>
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item" onclick="window.navigate('importar', this)">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Importar</span>
-                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Importar
-                    PDF</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Importar & Add</span>
             </div>
 
-            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
-                onclick="window.navigate('pedidos', this)">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                </svg>
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item" onclick="window.navigate('pedidos', this)">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Pedidos</span>
-                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Pedidos &
-                    Recibos</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Pedidos & Recibos</span>
             </div>
 
-            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
-                onclick="window.navigate('brindes', this)">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7">
-                    </path>
-                </svg>
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item" onclick="window.navigate('brindes', this)">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Brindes</span>
-                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Brindes &
-                    Amostras</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Brindes & Amostras</span>
             </div>
 
-            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
-                onclick="window.navigate('clientes', this)">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                    </path>
-                </svg>
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item" onclick="window.navigate('clientes', this)">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Clientes</span>
-                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Carteira de
-                    Clientes</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Carteira de Clientes</span>
             </div>
 
-            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item"
-                onclick="window.navigate('faturas', this)">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
-                    </path>
-                </svg>
+            <div class="p-2 md:p-3 md:px-4 rounded-xl flex flex-col md:flex-row items-center justify-center md:group-hover:justify-start text-slate-500 dark:text-slate-400 hover:bg-brand-light/10 hover:text-brand-light cursor-pointer transition-colors nav-item" onclick="window.navigate('faturas', this)">
+                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                 <span class="text-[10px] mt-1 font-bold md:hidden leading-none">Faturas</span>
-                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Faturas O
-                    Boticário</span>
+                <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Faturas O Boticário</span>
             </div>
         </nav>
 
         <div class="hidden md:flex p-3 border-t border-slate-200 dark:border-slate-800 shrink-0">
-            <div class="p-3 w-full rounded-xl flex items-center justify-center md:group-hover:justify-start md:px-4 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
-                onclick="window.toggleTheme()">
-                <svg class="w-6 h-6 shrink-0 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                    </path>
-                </svg>
-                <svg class="w-6 h-6 shrink-0 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
-                    </path>
-                </svg>
+            <div class="p-3 w-full rounded-xl flex items-center justify-center md:group-hover:justify-start md:px-4 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 cursor-pointer transition-colors" onclick="window.toggleTheme()">
+                <svg class="w-6 h-6 shrink-0 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <svg class="w-6 h-6 shrink-0 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 <span class="hidden group-hover:md:block ml-4 font-semibold text-sm whitespace-nowrap">Mudar Tema</span>
             </div>
         </div>
@@ -284,73 +173,45 @@
 
     <main class="order-2 flex-1 h-full overflow-y-auto relative flex flex-col" id="main-container">
 
-        <header
-            class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 p-4 flex justify-between items-center sticky top-0 z-30 shadow-sm transition-colors">
+        <header class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 p-4 flex justify-between items-center sticky top-0 z-30 shadow-sm transition-colors">
             <div class="flex items-center gap-4">
-                <div
-                    class="p-3 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl shadow-sm">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
-                        </path>
-                    </svg>
+                <div class="p-3 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Saldo
-                            na Carteira</p>
-                        <button onclick="window.editarCarteira()"
-                            class="text-slate-400 hover:text-brand-light transition-colors" title="Editar Valor">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                </path>
-                            </svg>
+                        <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Saldo na Carteira</p>
+                        <button onclick="window.editarCarteira()" class="text-slate-400 hover:text-brand-light transition-colors" title="Editar Valor">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                         </button>
                     </div>
-                    <p id="global-carteira"
-                        class="text-2xl font-black text-emerald-600 dark:text-emerald-400 leading-none mt-1">R$ 0,00</p>
+                    <p id="global-carteira" class="text-2xl font-black text-emerald-600 dark:text-emerald-400 leading-none mt-1">R$ 0,00</p>
                 </div>
             </div>
         </header>
 
         <div class="p-4 md:p-8 flex-1 pb-6">
+            
             <section id="dashboard" class="view-section active">
-                <h2 class="text-2xl md:text-3xl font-bold mb-6 tracking-tight dark:text-white">Visão Geral do Negócio
-                </h2>
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 tracking-tight dark:text-white">Visão Geral do Negócio</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
-                    <div
-                        class="p-6 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <h4
-                            class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">
-                            A Receber (Clientes)</h4>
-                        <p id="dash-receber" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">R$ 0,00
-                        </p>
+                    <div class="p-6 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <h4 class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">A Receber (Clientes)</h4>
+                        <p id="dash-receber" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">R$ 0,00</p>
                     </div>
-                    <div
-                        class="p-6 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <h4
-                            class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">
-                            A Pagar (Faturas)</h4>
+                    <div class="p-6 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <h4 class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">A Pagar (Faturas)</h4>
                         <p id="dash-custo" class="text-3xl font-bold text-rose-600 dark:text-rose-500">R$ 0,00</p>
                     </div>
-                    <div
-                        class="p-6 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <h4
-                            class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">
-                            Itens em Estoque</h4>
+                    <div class="p-6 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <h4 class="text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">Itens em Estoque</h4>
                         <p id="dash-estoque" class="text-3xl font-bold text-brand-light dark:text-brand-dark">0</p>
                     </div>
                 </div>
 
-                <div
-                    class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded-2xl p-4 md:p-6 shadow-sm">
-                    <h3
-                        class="text-xl font-bold mb-4 tracking-tight border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center gap-2 dark:text-white">
-                        <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
+                <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded-2xl p-4 md:p-6 shadow-sm">
+                    <h3 class="text-xl font-bold mb-4 tracking-tight border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center gap-2 dark:text-white">
+                        <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Cobranças e Atrasos
                     </h3>
                     <div id="lista-vencimentos" class="space-y-3"></div>
@@ -358,60 +219,81 @@
             </section>
 
             <section id="importar" class="view-section">
-                <h2 class="text-2xl md:text-3xl font-bold mb-6 tracking-tight dark:text-white">Importar Extrato O
-                    Boticário</h2>
-                <div
-                    class="mb-6 p-4 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border border-brand-light/30 dark:border-brand-light/20 rounded-xl shadow-sm">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Valor do Frete /
-                        Taxas (R$)</label>
-                    <input type="number" id="input-frete" placeholder="Ex: 15.90"
-                        class="w-full md:w-1/3 p-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light shadow-inner">
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Este valor será somado ao custo total
-                        devido à Boticário.</p>
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 tracking-tight dark:text-white">Importar ou Adicionar Pedidos</h2>
+                
+                <div class="mb-6 p-4 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border border-brand-light/30 dark:border-brand-light/20 rounded-xl shadow-sm">
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Valor do Frete / Taxas (R$)</label>
+                    <input type="number" id="input-frete" placeholder="Ex: 15.90" class="w-full md:w-1/3 p-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light shadow-inner">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Este valor será somado ao custo total devido à Boticário na geração das Faturas.</p>
                 </div>
-                <div class="p-10 md:p-16 rounded-3xl flex flex-col items-center justify-center border-dashed border-2 border-brand-light/50 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md hover:bg-brand-light/10 dark:hover:bg-slate-800 transition-all cursor-pointer group shadow-sm"
-                    onclick="document.getElementById('pdf-upload').click()">
-                    <div
-                        class="p-5 bg-white dark:bg-slate-800 shadow-lg rounded-full mb-5 group-hover:scale-110 transition-transform">
-                        <svg class="w-10 h-10 text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
-                            </path>
-                        </svg>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- PDF IMPORT -->
+                    <div class="flex flex-col">
+                        <h3 class="text-lg font-bold mb-3 dark:text-white flex items-center gap-2">
+                            <svg class="w-5 h-5 text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                            Via Nota Fiscal ou Extrato (PDF)
+                        </h3>
+                        <div class="flex-1 p-8 rounded-3xl flex flex-col items-center justify-center border-dashed border-2 border-brand-light/50 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md hover:bg-brand-light/10 dark:hover:bg-slate-800 transition-all cursor-pointer group shadow-sm" onclick="document.getElementById('pdf-upload').click()">
+                            <div class="p-4 bg-white dark:bg-slate-800 shadow-lg rounded-full mb-4 group-hover:scale-110 transition-transform">
+                                <svg class="w-8 h-8 text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            </div>
+                            <p id="upload-text" class="text-lg text-slate-800 dark:text-white font-bold mb-1 text-center">Clique para selecionar o PDF</p>
+                            <p class="text-xs text-slate-500 text-center">Suporta arquivo de NF-e e Extrato de Pedido</p>
+                            <input type="file" id="pdf-upload" accept=".pdf" class="hidden">
+                        </div>
                     </div>
-                    <p id="upload-text" class="text-xl text-slate-800 dark:text-white font-bold mb-2 text-center">Clique
-                        para selecionar o PDF</p>
-                    <input type="file" id="pdf-upload" accept=".pdf" class="hidden">
+
+                    <!-- MANUAL ENTRY -->
+                    <div class="flex flex-col">
+                        <h3 class="text-lg font-bold mb-3 dark:text-white flex items-center gap-2">
+                            <svg class="w-5 h-5 text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            Adição Manual de Produtos
+                        </h3>
+                        <div class="flex-1 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-3">
+                            <div class="flex gap-3">
+                                <input type="text" id="man-cod" placeholder="Código (Opc)" class="w-1/3 p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-sm outline-none focus:border-brand-light">
+                                <input type="text" id="man-nome" placeholder="Nome do Produto *" class="w-2/3 p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-sm outline-none focus:border-brand-light">
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="w-1/3">
+                                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Quantidade</label>
+                                    <input type="number" id="man-qtd" value="1" min="1" class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-sm outline-none focus:border-brand-light">
+                                </div>
+                                <div class="w-1/3">
+                                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Custo Total</label>
+                                    <input type="number" id="man-custo" placeholder="R$ 0,00" class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-sm outline-none focus:border-brand-light">
+                                </div>
+                                <div class="w-1/3">
+                                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Revenda Total</label>
+                                    <input type="number" id="man-revenda" placeholder="R$ 0,00" class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-sm outline-none focus:border-brand-light">
+                                </div>
+                            </div>
+                            <div class="mt-auto pt-4 flex gap-2">
+                                <button onclick="window.adicionarManual()" class="flex-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white py-3 rounded-xl font-bold text-sm transition-colors shadow-sm">
+                                    + Inserir na Fila
+                                </button>
+                                <button onclick="window.iniciarProcessamentoManual()" class="flex-1 bg-brand-light hover:bg-brand-dark text-white py-3 rounded-xl font-bold text-sm shadow-md transition-colors flex items-center justify-center gap-2">
+                                    Alocar Fila <span id="badge-fila" class="bg-white/20 px-2 py-0.5 rounded-md text-xs font-black">0</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <section id="pedidos" class="view-section">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <div class="flex items-center gap-3">
-                        <h2 class="text-2xl md:text-3xl font-bold tracking-tight dark:text-white">Controle de Pedidos
-                        </h2>
-                        <span id="badge-edicao"
-                            class="hidden bg-rose-500 text-white px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest shadow-md animate-pulse">Edição
-                            Ativa</span>
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-tight dark:text-white">Controle de Pedidos</h2>
+                        <span id="badge-edicao" class="hidden bg-rose-500 text-white px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest shadow-md animate-pulse">Edição Ativa</span>
                     </div>
-                    <div
-                        class="flex bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-200 dark:border-slate-700 p-1 rounded-lg shadow-sm">
-                        <button onclick="window.setLayout('lista-pedidos', 'grid')"
-                            class="p-2 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
-                            title="Visualização em Grade">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
-                                </path>
-                            </svg>
+                    <div class="flex bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-200 dark:border-slate-700 p-1 rounded-lg shadow-sm">
+                        <button onclick="window.setLayout('lista-pedidos', 'grid')" class="p-2 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors" title="Visualização em Grade">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                         </button>
-                        <button onclick="window.setLayout('lista-pedidos', 'list')"
-                            class="p-2 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
-                            title="Visualização em Lista">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
+                        <button onclick="window.setLayout('lista-pedidos', 'list')" class="p-2 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors" title="Visualização em Lista">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                         </button>
                     </div>
                 </div>
@@ -420,10 +302,8 @@
 
             <section id="brindes" class="view-section">
                 <div class="mb-6">
-                    <h2 class="text-2xl md:text-3xl font-bold tracking-tight uppercase dark:text-white">Brindes &
-                        Amostras</h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Histórico de itens a custo zero
-                        extraídos das faturas.</p>
+                    <h2 class="text-2xl md:text-3xl font-bold tracking-tight uppercase dark:text-white">Brindes & Amostras</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Histórico de itens a custo zero extraídos das faturas.</p>
                 </div>
                 <div id="lista-brindes"></div>
             </section>
@@ -436,26 +316,12 @@
             <section id="faturas" class="view-section">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <div>
-                        <h2 class="text-2xl md:text-3xl font-bold tracking-tight dark:text-white">Faturas O Boticário
-                        </h2>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Controle o que você deve ao
-                            fornecedor.</p>
+                        <h2 class="text-2xl md:text-3xl font-bold tracking-tight dark:text-white">Faturas O Boticário</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Controle o que você deve ao fornecedor.</p>
                     </div>
-                    <div
-                        class="flex bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-200 dark:border-slate-700 p-1 rounded-lg shadow-sm">
-                        <button onclick="window.setLayout('lista-faturas', 'grid')"
-                            class="p-2 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"><svg
-                                class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
-                                </path>
-                            </svg></button>
-                        <button onclick="window.setLayout('lista-faturas', 'list')"
-                            class="p-2 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"><svg
-                                class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg></button>
+                    <div class="flex bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-200 dark:border-slate-700 p-1 rounded-lg shadow-sm">
+                        <button onclick="window.setLayout('lista-faturas', 'grid')" class="p-2 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg></button>
+                        <button onclick="window.setLayout('lista-faturas', 'list')" class="p-2 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
                     </div>
                 </div>
                 <div id="lista-faturas" class="layout-grid"></div>
@@ -463,185 +329,125 @@
         </div>
     </main>
 
-    <div id="modal-alocacao"
-        class="fixed inset-0 bg-slate-950/40 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
-        <div
-            class="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-800">
+    <!-- Modal Alocação -->
+    <div id="modal-alocacao" class="fixed inset-0 bg-slate-950/40 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-800">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl md:text-2xl font-bold tracking-tight dark:text-white">Designar Produto</h3><span
-                    id="modal-progresso"
-                    class="px-3 py-1 bg-brand-light/20 text-brand-dark dark:text-brand-light text-sm font-bold rounded-lg">0/0</span>
+                <h3 class="text-xl md:text-2xl font-bold tracking-tight dark:text-white">Designar Produto</h3><span id="modal-progresso" class="px-3 py-1 bg-brand-light/20 text-brand-dark dark:text-brand-light text-sm font-bold rounded-lg">0/0</span>
             </div>
-            <div
-                class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl mb-6 border border-slate-100 dark:border-slate-800">
-                <p id="modal-produto-nome"
-                    class="text-sm md:text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 leading-tight">-</p>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl mb-6 border border-slate-100 dark:border-slate-800">
+                <p id="modal-produto-nome" class="text-sm md:text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 leading-tight">-</p>
                 <div class="grid grid-cols-2 gap-2 md:gap-4">
-                    <div
-                        class="p-2 md:p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                        <span class="block text-slate-400 text-[10px] md:text-xs font-semibold uppercase mb-1">Seu
-                            Custo</span><strong id="modal-produto-custo"
-                            class="text-base md:text-lg text-slate-900 dark:text-white font-black">R$ 0,00</strong>
+                    <div class="p-2 md:p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <span class="block text-slate-400 text-[10px] md:text-xs font-semibold uppercase mb-1">Seu Custo</span><strong id="modal-produto-custo" class="text-base md:text-lg text-slate-900 dark:text-white font-black">R$ 0,00</strong>
                     </div>
-                    <div
-                        class="p-2 md:p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                        <span
-                            class="block text-slate-400 text-[10px] md:text-xs font-semibold uppercase mb-1">Revenda</span><strong
-                            id="modal-produto-revenda" class="text-base md:text-lg text-brand-light font-black">R$
-                            0,00</strong>
+                    <div class="p-2 md:p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <span class="block text-slate-400 text-[10px] md:text-xs font-semibold uppercase mb-1">Revenda</span><strong id="modal-produto-revenda" class="text-base md:text-lg text-brand-light font-black">R$ 0,00</strong>
                     </div>
                 </div>
             </div>
             <div class="mb-5">
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Destino do
-                    Item:</label>
-                <select id="modal-destino"
-                    class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 outline-none focus:border-brand-light font-medium"
-                    onchange="window.toggleClienteSelect()">
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Destino do Item:</label>
+                <select id="modal-destino" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 outline-none focus:border-brand-light font-medium" onchange="window.toggleClienteSelect()">
                     <option value="cliente">Venda para Cliente (Lucro)</option>
                     <option value="pessoal">Consumo Pessoal (A Custo)</option>
                     <option value="estoque">Guardar no Estoque</option>
                 </select>
             </div>
             <div id="div-cliente" class="mb-8 space-y-4">
-                <div><label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Nome do
-                        Cliente:</label><input type="text" id="input-nome-cliente" placeholder="Ex: Maria"
-                        class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light font-medium"
-                        oninput="window.autocompletarCliente()"></div>
-                <div><label
-                        class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">WhatsApp:</label><input
-                        type="tel" id="input-zap-cliente" placeholder="Ex: 21999999999"
-                        class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light font-medium">
-                </div>
+                <div><label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Nome do Cliente:</label><input type="text" id="input-nome-cliente" placeholder="Ex: Maria" class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light font-medium" oninput="window.autocompletarCliente()"></div>
+                <div><label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">WhatsApp:</label><input type="tel" id="input-zap-cliente" placeholder="Ex: 21999999999" class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light font-medium"></div>
             </div>
             <div class="flex gap-2 md:gap-4">
-                <button onclick="window.fecharModal()"
-                    class="w-1/3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-3 rounded-xl font-bold">Cancelar</button>
-                <button onclick="window.salvarAlocacao()"
-                    class="w-2/3 bg-brand-light hover:bg-brand-dark text-white py-3 rounded-xl font-bold shadow-lg">Confirmar</button>
+                <button onclick="window.fecharModal()" class="w-1/3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 py-3 rounded-xl font-bold">Cancelar</button>
+                <button onclick="window.salvarAlocacao()" class="w-2/3 bg-brand-light hover:bg-brand-dark text-white py-3 rounded-xl font-bold shadow-lg">Confirmar</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-checkout"
-        class="fixed inset-0 bg-slate-950/40 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
-        <div
-            class="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[85vh] flex flex-col">
-            <div class="mb-6">
-                <h3 class="text-xl md:text-2xl font-bold tracking-tight dark:text-white">Estruturar Parcelamentos</h3>
-            </div>
+    <!-- Outros Modais (Checkout, Edição, Recibo) -->
+    <div id="modal-checkout" class="fixed inset-0 bg-slate-950/40 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[85vh] flex flex-col">
+            <div class="mb-6"><h3 class="text-xl md:text-2xl font-bold tracking-tight dark:text-white">Estruturar Parcelamentos</h3></div>
             <div id="checkout-lista" class="flex-1 overflow-y-auto pr-2 space-y-4 mb-6 no-scrollbar"></div>
-            <button onclick="window.confirmarCheckoutEGravar()"
-                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-black text-lg shadow-lg">Finalizar
-                e Salvar</button>
+            <button onclick="window.confirmarCheckoutEGravar()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-black text-lg shadow-lg">Finalizar e Salvar</button>
         </div>
     </div>
 
-    <div id="modal-editar-pedido"
-        class="fixed inset-0 bg-slate-950/40 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
-        <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-3xl max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-800">
+    <div id="modal-editar-pedido" class="fixed inset-0 bg-slate-950/40 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-800">
             <h3 class="text-xl font-bold mb-4 dark:text-white">Editar Informações do Pedido</h3>
             <input type="hidden" id="edit-ped-id">
             <div class="space-y-4 mb-6">
-                <div><label class="block text-sm font-semibold mb-1 dark:text-slate-300">Nome do Cliente:</label><input
-                        type="text" id="edit-ped-nome"
-                        class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light">
-                </div>
-                <div><label class="block text-sm font-semibold mb-1 dark:text-slate-300">WhatsApp:</label><input
-                        type="tel" id="edit-ped-tel"
-                        class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light">
-                </div>
+                <div><label class="block text-sm font-semibold mb-1 dark:text-slate-300">Nome do Cliente:</label><input type="text" id="edit-ped-nome" class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light"></div>
+                <div><label class="block text-sm font-semibold mb-1 dark:text-slate-300">WhatsApp:</label><input type="tel" id="edit-ped-tel" class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light"></div>
             </div>
             <div class="flex gap-3">
-                <button onclick="document.getElementById('modal-editar-pedido').classList.add('hidden')"
-                    class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-white py-3 rounded-xl font-bold transition-colors">Cancelar</button>
-                <button onclick="window.salvarEdicaoPedido()"
-                    class="flex-1 bg-brand-light text-white py-3 rounded-xl font-bold shadow-lg">Salvar</button>
+                <button onclick="document.getElementById('modal-editar-pedido').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-white py-3 rounded-xl font-bold transition-colors">Cancelar</button>
+                <button onclick="window.salvarEdicaoPedido()" class="flex-1 bg-brand-light text-white py-3 rounded-xl font-bold shadow-lg">Salvar</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-editar-brinde"
-        class="fixed inset-0 bg-slate-950/40 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
-        <div
-            class="bg-white dark:bg-slate-900 p-6 rounded-3xl max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-800">
+    <div id="modal-editar-brinde" class="fixed inset-0 bg-slate-950/40 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-800">
             <h3 class="text-xl font-bold mb-4 dark:text-white">Editar Brinde</h3>
             <input type="hidden" id="edit-brinde-id">
             <div class="space-y-4 mb-6">
-                <div><label class="block text-sm font-semibold mb-1 dark:text-slate-300">Descrição:</label><input
-                        type="text" id="edit-brinde-nome"
-                        class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light">
-                </div>
-                <div><label class="block text-sm font-semibold mb-1 dark:text-slate-300">Quantidade:</label><input
-                        type="number" id="edit-brinde-qtd"
-                        class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light">
-                </div>
+                <div><label class="block text-sm font-semibold mb-1 dark:text-slate-300">Descrição:</label><input type="text" id="edit-brinde-nome" class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light"></div>
+                <div><label class="block text-sm font-semibold mb-1 dark:text-slate-300">Quantidade:</label><input type="number" id="edit-brinde-qtd" class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none focus:border-brand-light"></div>
             </div>
             <div class="flex gap-3">
-                <button onclick="document.getElementById('modal-editar-brinde').classList.add('hidden')"
-                    class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-white py-3 rounded-xl font-bold transition-colors">Cancelar</button>
-                <button onclick="window.salvarEdicaoBrinde()"
-                    class="flex-1 bg-brand-light text-white py-3 rounded-xl font-bold shadow-lg">Salvar</button>
+                <button onclick="document.getElementById('modal-editar-brinde').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-white py-3 rounded-xl font-bold transition-colors">Cancelar</button>
+                <button onclick="window.salvarEdicaoBrinde()" class="flex-1 bg-brand-light text-white py-3 rounded-xl font-bold shadow-lg">Salvar</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-recibo"
-        class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4 z-50">
-        <div
-            class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[90vh]">
-            <div id="recibo-print-area"
-                class="p-6 overflow-y-auto flex-1 bg-white dark:bg-slate-900 transition-colors no-scrollbar">
-                <div class="text-center border-b border-dashed border-slate-300 dark:border-slate-700 pb-4 mb-4">
-                    <h3 class="text-xl font-black text-slate-800 dark:text-white tracking-tight">O BOTICÁRIO</h3>
-                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Comprovante de Compra
-                    </p>
+    <div id="modal-recibo" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[90vh]">
+            <div id="recibo-print-area" class="p-8 overflow-y-auto flex-1 bg-white dark:bg-slate-900 transition-colors no-scrollbar font-sans">
+                <!-- Cabeçalho -->
+                <div class="flex justify-between items-center border-b-2 border-slate-900 dark:border-white pb-4 mb-6">
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">O BOTICÁRIO</h3>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Comprovante de Compra</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] font-bold text-slate-400 block uppercase">Pedido</span>
+                        <span id="recibo-ref" class="font-black text-slate-800 dark:text-slate-200">---</span>
+                    </div>
                 </div>
-                <div
-                    class="space-y-1.5 text-sm mb-4 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
-                    <div class="flex justify-between"><span
-                            class="text-slate-400 font-bold text-xs">CLIENTE:</span><span id="recibo-cliente"
-                            class="font-black text-slate-800 dark:text-white uppercase">---</span></div>
-                    <div class="flex justify-between"><span class="text-slate-400 font-bold text-xs">REF
-                            CAIXA:</span><span id="recibo-ref"
-                            class="font-bold text-slate-700 dark:text-slate-300">---</span></div>
+
+                <!-- Cliente -->
+                <div class="mb-6">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Cliente</span>
+                    <span id="recibo-cliente" class="text-lg font-black text-slate-900 dark:text-white uppercase leading-none">---</span>
                 </div>
-                <div class="mb-4">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Itens Adquiridos</p>
-                    <div id="recibo-itens" class="divide-y divide-slate-100 dark:divide-slate-800"></div>
+
+                <!-- Itens Adquiridos -->
+                <div id="recibo-itens" class="mb-6"></div>
+
+                <!-- Total -->
+                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 mb-6 flex justify-between items-center border border-slate-100 dark:border-slate-800">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Total da Compra</span>
+                    <span id="recibo-total" class="text-2xl font-black text-brand-light">R$ 0,00</span>
                 </div>
-                <div class="border-t border-slate-200 dark:border-slate-800 pt-3 space-y-2">
-                    <div class="flex justify-between items-center mb-2"><span
-                            class="text-sm font-bold text-slate-500 dark:text-slate-400">TOTAL DA COMPRA:</span><span
-                            id="recibo-total" class="text-xl font-black text-brand-light">R$ 0,00</span></div>
-                    <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 space-y-1 border border-slate-100 dark:border-slate-800"
-                        id="recibo-parcelas-lista"></div>
-                </div>
+
+                <!-- Tabela de Parcelas -->
+                <div id="recibo-parcelas-lista" class="mb-2"></div>
             </div>
-            <div
-                class="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 flex gap-3 transition-colors">
-                <button onclick="document.getElementById('modal-recibo').classList.add('hidden')"
-                    class="flex-1 py-3 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl text-xs font-black uppercase tracking-wider hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">Fechar</button>
-                <button onclick="window.compartilharFotoRecibo()"
-                    class="flex-1 py-3 bg-emerald-500 text-white rounded-2xl text-xs font-black uppercase tracking-wider hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2 shadow-lg"><svg
-                        class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771z" />
-                    </svg> WhatsApp</button>
+            <div class="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 flex gap-3 transition-colors">
+                <button onclick="document.getElementById('modal-recibo').classList.add('hidden')" class="flex-1 py-3 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl text-xs font-black uppercase tracking-wider hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">Fechar</button>
+                <button onclick="window.compartilharFotoRecibo()" class="flex-1 py-3 bg-emerald-500 text-white rounded-2xl text-xs font-black uppercase tracking-wider hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2 shadow-lg"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771z" /></svg> WhatsApp</button>
             </div>
         </div>
     </div>
 
+    <!-- Floating Edit Button -->
     <div class="fixed bottom-[90px] md:bottom-6 right-4 md:right-6 flex flex-col gap-4 z-50">
-        <button onclick="window.toggleEditMode()" id="btn-edit"
-            class="p-4 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-white/60 dark:border-slate-700/60 text-slate-700 dark:text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center"
-            title="Ativar Modo Edição">
-            <svg class="w-6 h-6 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                </path>
-            </svg>
+        <button onclick="window.toggleEditMode()" id="btn-edit" class="p-4 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-white/60 dark:border-slate-700/60 text-slate-700 dark:text-white shadow-xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center" title="Ativar Modo Edição">
+            <svg class="w-6 h-6 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
         </button>
     </div>
 
@@ -670,25 +476,19 @@
         window.saldoCarteira = 0;
         window.reciboAtualExport = null;
 
-        window.formatMoney = function (val) {
-            return Number(val).toFixed(2).replace('.', ',');
-        };
-
+        window.formatMoney = function (val) { return Number(val).toFixed(2).replace('.', ','); };
         window.parseMoney = function (valorStr) {
             if (!valorStr) return 0;
             const num = Number(String(valorStr).replace(/[R$\s]/g, '').replace(',', '.'));
             return isNaN(num) ? 0 : num;
         };
-
         function parseDataBr(str) { const [d, m, y] = str.split('/'); return new Date(y, m - 1, d).getTime(); }
 
         window.toggleTheme = () => { document.documentElement.classList.toggle('dark'); };
-
         window.toggleEditMode = () => {
             window.modoEdicaoAtivo = !window.modoEdicaoAtivo;
             document.getElementById('main-container').classList.toggle('edit-mode-active');
             document.getElementById('badge-edicao').classList.toggle('hidden');
-
             const btn = document.getElementById('btn-edit');
             if (window.modoEdicaoAtivo) {
                 btn.className = "p-4 rounded-full bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.5)] hover:scale-110 active:scale-95 transition-all flex items-center justify-center";
@@ -715,10 +515,8 @@
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('nav-active'));
             document.getElementById(sectionId)?.classList.add('active');
-
             if (elementCtx) elementCtx.classList.add('nav-active');
             else document.querySelector(`[onclick*="'${sectionId}'"]`)?.classList.add('nav-active');
-
             if (['pedidos', 'dashboard', 'clientes', 'faturas'].includes(sectionId)) window.carregarBaseDados();
             if (sectionId === 'brindes') window.carregarBrindes();
         };
@@ -727,7 +525,6 @@
             const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
             const vData = new Date(parseDataBr(vencStr));
             const diffDias = Math.round((vData - hoje) / 86400000);
-
             if (diffDias < 0) return { lbl: `<span class="text-[9px] px-1.5 py-0.5 rounded uppercase font-black bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-400 border border-rose-200 dark:border-rose-800/50 shadow-sm">Vencido há ${Math.abs(diffDias)} dia(s)</span>`, atrasado: true, diasAtraso: Math.abs(diffDias) };
             if (diffDias === 0) return { lbl: `<span class="text-[9px] px-1.5 py-0.5 rounded uppercase font-black bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50 shadow-sm">Vence Hoje</span>`, atrasado: false, diasAtraso: 0 };
             return { lbl: `<span class="text-[9px] px-1.5 py-0.5 rounded uppercase font-black bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700 shadow-sm">Vence em ${diffDias} dia(s)</span>`, atrasado: false, diasAtraso: 0 };
@@ -779,54 +576,28 @@
 
         window.enviarCobrancaWPP = (tel, nome, numParc, valor, dataVenc, diasAtraso) => {
             let msg = `Olá, *${nome}*! Espero que esteja bem. ✨\n\nPassando para compartilhar o detalhamento da *Parcela ${numParc}* referente ao seu pedido da O Boticário.\n\n🗓️ *Vencimento original:* ${dataVenc}`;
-
             if (diasAtraso > 0) {
-                const multa = 5.93;
-                const juros = diasAtraso * 0.89;
-                const valorBase = valor - multa - juros;
-
+                const multa = 5.93; const juros = diasAtraso * 0.89; const valorBase = valor - multa - juros;
                 msg += `\n\n⚠️ *Atenção: Parcela em atraso (${diasAtraso} dias).*`;
                 msg += `\n➖ Valor base original: R$ ${formatMoney(valorBase)}`;
                 msg += `\n➕ Multa fixa: R$ ${formatMoney(multa)}`;
                 msg += `\n➕ Juros acumulados: R$ ${formatMoney(juros)}`;
                 msg += `\n💰 *Total atualizado: R$ ${formatMoney(valor)}*`;
-            } else {
-                msg += `\n\n🛍️ *Valor da Parcela:* R$ ${formatMoney(valor)}`;
-            }
-
-            // ==========================================
-            // LINK CORRETO DA PÁGINA DO CLIENTE
-            // Passando o telefone limpo (apenas números) como ID para o cliente.html ler depois.
-            // ==========================================
+            } else { msg += `\n\n🛍️ *Valor da Parcela:* R$ ${formatMoney(valor)}`; }
             const idCliente = tel.replace(/\D/g, '');
             const linkPaginaCliente = `https://duckmj.github.io/Oboticario2.0/cliente.html?id=${idCliente}`;
-
-            msg += `\n\nVeja todos os detalhes e acesse sua área no link abaixo:\n${linkPaginaCliente}`;
-            msg += `\n\nQualquer dúvida ou se precisar da chave Pix, estou à disposição!`;
-
+            msg += `\n\nVeja todos os detalhes e acesse sua área no link abaixo:\n${linkPaginaCliente}\n\nQualquer dúvida ou se precisar da chave Pix, estou à disposição!`;
             const link = tel ? `https://wa.me/55${idCliente}?text=${encodeURIComponent(msg)}` : null;
-
-            if (link) {
-                window.open(link, '_blank');
-            } else {
-                alert('Cliente sem WhatsApp salvo no sistema.');
-            }
+            if (link) window.open(link, '_blank'); else alert('Cliente sem WhatsApp salvo no sistema.');
         };
 
         window.verificarVencimentosNtfy = async (vendasSnap, faturasSnap) => {
-            const limiteDiasAviso = 3; // Quantos dias de antecedência para avisar
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-
-            // Controle de anti-spam: Verifica se já notificou hoje
+            const limiteDiasAviso = 3; const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
             const hojeStr = hoje.toISOString().split('T')[0];
             const ultimaNotif = localStorage.getItem('ntfy_last_trigger');
-            if (ultimaNotif === hojeStr) return; // Se já disparou hoje, interrompe a função
+            if (ultimaNotif === hojeStr) return;
+            let alertasClientes = []; let alertasFaturas = [];
 
-            let alertasClientes = [];
-            let alertasFaturas = [];
-
-            // 1. Mapear Faturas (Boticário)
             faturasSnap.forEach(docSnap => {
                 const f = docSnap.data();
                 if (f.parcelas) {
@@ -834,7 +605,6 @@
                         if (p.status !== 'pago') {
                             const fData = new Date(parseDataBr(p.vencimento));
                             const diffDias = Math.round((fData - hoje) / 86400000);
-
                             if (diffDias <= limiteDiasAviso) {
                                 let statusText = diffDias < 0 ? `🔴 Vencido há ${Math.abs(diffDias)} dias` : (diffDias === 0 ? `🟡 Vence HOJE` : `🟢 Vence em ${diffDias} dias`);
                                 alertasFaturas.push(`- Fatura #${docSnap.id} (${p.numero}x): R$ ${formatMoney(p.valor)} (${statusText})`);
@@ -844,7 +614,6 @@
                 }
             });
 
-            // 2. Mapear Pedidos (Clientes)
             vendasSnap.forEach(docSnap => {
                 const v = docSnap.data();
                 if (v.parcelas) {
@@ -852,7 +621,6 @@
                         if (p.status === 'pendente') {
                             const vData = new Date(parseDataBr(p.vencimento));
                             const diffDias = Math.round((vData - hoje) / 86400000);
-
                             if (diffDias <= limiteDiasAviso) {
                                 let statusText = diffDias < 0 ? `🔴 Vencido há ${Math.abs(diffDias)} dias` : (diffDias === 0 ? `🟡 Vence HOJE` : `🟢 Vence em ${diffDias} dias`);
                                 alertasClientes.push(`- ${v.nome_cliente.toUpperCase()}: R$ ${formatMoney(p.valor)} (${statusText})`);
@@ -862,42 +630,24 @@
                 }
             });
 
-            // Se não houver nada a vencer/vencido, sai da função
             if (alertasClientes.length === 0 && alertasFaturas.length === 0) return;
-
-            // 3. Montar a mensagem Markdown para o Ntfy
             let msgNtfy = '';
-            if (alertasFaturas.length > 0) {
-                msgNtfy += `🏢 **FATURAS OBOTICÁRIO**\n${alertasFaturas.join('\n')}\n\n`;
-            }
-            if (alertasClientes.length > 0) {
-                msgNtfy += `🛍️ **COBRANÇAS CLIENTES**\n${alertasClientes.join('\n')}`;
-            }
+            if (alertasFaturas.length > 0) msgNtfy += `🏢 **FATURAS OBOTICÁRIO**\n${alertasFaturas.join('\n')}\n\n`;
+            if (alertasClientes.length > 0) msgNtfy += `🛍️ **COBRANÇAS CLIENTES**\n${alertasClientes.join('\n')}`;
 
-            // 4. Disparar a notificação
             try {
                 await fetch('https://ntfy.sh/bto_cob_matheus', {
-                    method: 'POST',
-                    body: msgNtfy.trim(),
-                    headers: {
-                        'Title': '⚠️ Relatório de Vencimentos',
-                        'Tags': 'rotating_light,moneybag',
-                        'Markdown': 'yes'
-                    }
+                    method: 'POST', body: msgNtfy.trim(),
+                    headers: { 'Title': '⚠️ Relatório de Vencimentos', 'Tags': 'rotating_light,moneybag', 'Markdown': 'yes' }
                 });
-
-                // Grava a data no navegador para não disparar novamente hoje
                 localStorage.setItem('ntfy_last_trigger', hojeStr);
-            } catch (e) {
-                console.error("Erro ao enviar Ntfy:", e);
-            }
+            } catch (e) { console.error("Erro ao enviar Ntfy:", e); }
         };
 
         window.carregarBaseDados = async function () {
             try {
                 let totalReceber = 0; let totalPagar = 0; let qtdEstoque = 0;
                 let pedidosHTML = ''; let listaVencimentos = []; let clientesMap = {};
-
                 const cartRef = doc(db, "sistema", "carteira");
                 const cartSnap = await getDoc(cartRef);
                 if (cartSnap.exists()) window.saldoCarteira = cartSnap.data().saldo || 0;
@@ -907,7 +657,6 @@
                 const [vendasSnap, estoqueSnap, faturasSnap] = await Promise.all([
                     getDocs(collection(db, "vendas")), getDocs(collection(db, "estoque")), getDocs(collection(db, "faturas_boticario"))
                 ]);
-                // Aciona a verificação passando os dados recém-carregados
                 window.verificarVencimentosNtfy(vendasSnap, faturasSnap);
                 qtdEstoque = estoqueSnap.size;
 
@@ -926,31 +675,23 @@
                 });
                 document.getElementById('lista-faturas').innerHTML = faturasHTML || '<p class="text-slate-500 dark:text-slate-400">Nenhuma fatura registrada.</p>';
 
-                // --- INÍCIO DA ALTERAÇÃO PARA ORDENAÇÃO ---
-                // 1. Extrai os dados do snapshot para um array e calcula o vencimento ativo mais próximo
                 let pedidosOrdenados = [];
                 vendasSnap.forEach(docSnap => {
-                    const v = docSnap.data();
-                    const vId = docSnap.id;
-
-                    let proximoVencimento = Infinity; // Padrão caso todas as parcelas estejam pagas (vai para o fim)
+                    const v = docSnap.data(); const vId = docSnap.id;
+                    let proximoVencimento = Infinity;
                     if (v.parcelas) {
                         v.parcelas.forEach(p => {
                             if (p.status === 'pendente') {
                                 const timestampParcela = parseDataBr(p.vencimento);
-                                if (timestampParcela < proximoVencimento) {
-                                    proximoVencimento = timestampParcela;
-                                }
+                                if (timestampParcela < proximoVencimento) proximoVencimento = timestampParcela;
                             }
                         });
                     }
                     pedidosOrdenados.push({ docSnap, v, vId, proximoVencimento });
                 });
 
-                // 2. Ordena o array: o menor timestamp (data mais próxima ou mais atrasada) vem primeiro
                 pedidosOrdenados.sort((a, b) => a.proximoVencimento - b.proximoVencimento);
 
-                // 3. Renderiza os cards seguindo a nova ordem estabelecida
                 pedidosOrdenados.forEach(({ docSnap, v, vId }) => {
                     const nomeCli = v.nome_cliente.toUpperCase();
                     if (!clientesMap[nomeCli]) clientesMap[nomeCli] = { nome: nomeCli, telefone: v.telefone || '', total_comprado: 0, pedidos: 0 };
@@ -961,21 +702,16 @@
                     if (v.parcelas) {
                         v.parcelas.forEach((p, idx) => {
                             let statusP = calcularStatusPrazo(p.vencimento);
-                            let valorBase = window.parseMoney(p.valor); // Garante que é número
+                            let valorBase = window.parseMoney(p.valor);
                             let valorExibir = valorBase;
                             let textoEncargos = '';
 
                             if (p.status === 'pendente') {
-                                // Se estiver atrasado, aplica a matemática correta
                                 if (statusP.atrasado && statusP.diasAtraso > 0) {
-                                    const multa = 5.93;
-                                    const juros = statusP.diasAtraso * 0.89;
+                                    const multa = 5.93; const juros = statusP.diasAtraso * 0.89;
                                     valorExibir = valorBase + multa + juros;
-
-                                    // Renderiza o descritivo no DOM
                                     textoEncargos = `<span class="text-[9px] text-rose-500 font-bold block mt-1 leading-none">+ Juros/Multa: R$ ${window.formatMoney(multa + juros)}</span>`;
                                 }
-
                                 totalReceber += valorExibir;
                                 listaVencimentos.push({ cliente: v.nome_cliente, num: p.numero, valorCobrar: valorExibir, dataStr: p.vencimento, timestamp: parseDataBr(p.vencimento), tel: v.telefone || '', dias: statusP.diasAtraso });
                             }
@@ -984,50 +720,13 @@
                             const btnColor = isPago ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-emerald-500 hover:text-white dark:hover:bg-emerald-600';
                             const lblDias = isPago ? '<span class="text-[9px] px-1.5 py-0.5 rounded uppercase font-black bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50 shadow-sm">RECEBIDO</span>' : statusP.lbl;
 
-                            parcelasList += `
-                                <div class="flex justify-between items-center py-3 border-b border-slate-200 dark:border-slate-800 last:border-0">
-                                    <div class="text-xs">
-                                        <span class="font-bold text-slate-800 dark:text-slate-200">${p.numero}x R$ ${window.formatMoney(valorExibir)}</span>
-                                        ${textoEncargos}
-                                        <div class="mt-1.5 flex items-center gap-2 flex-wrap">
-                                            <span class="text-slate-500 dark:text-slate-400 font-medium">Venc: ${p.vencimento}</span>
-                                            ${lblDias}
-                                            <button onclick="window.editarDataParcela('${vId}', ${idx}, '${p.vencimento}')" class="edit-action text-brand-light font-black text-[9px] bg-brand-light/10 px-1.5 py-0.5 rounded hover:bg-brand-light hover:text-white transition-colors">DATA</button>
-                                        </div>
-                                    </div>
-                                    <div class="text-right pl-2 shrink-0">
-                                        <button onclick="window.alternarPagamentoCliente('${vId}', ${idx}, '${p.status}', ${valorExibir})" class="px-3 py-1.5 text-[10px] font-black uppercase rounded-lg shadow-sm transition-all ${btnColor}">
-                                            ${isPago ? 'Pago' : 'Pagar'}
-                                        </button>
-                                    </div>
-                                </div>`;
+                            parcelasList += `<div class="flex justify-between items-center py-3 border-b border-slate-200 dark:border-slate-800 last:border-0"><div class="text-xs"><span class="font-bold text-slate-800 dark:text-slate-200">${p.numero}x R$ ${window.formatMoney(valorExibir)}</span>${textoEncargos}<div class="mt-1.5 flex items-center gap-2 flex-wrap"><span class="text-slate-500 dark:text-slate-400 font-medium">Venc: ${p.vencimento}</span>${lblDias}<button onclick="window.editarDataParcela('${vId}', ${idx}, '${p.vencimento}')" class="edit-action text-brand-light font-black text-[9px] bg-brand-light/10 px-1.5 py-0.5 rounded hover:bg-brand-light hover:text-white transition-colors">DATA</button></div></div><div class="text-right pl-2 shrink-0"><button onclick="window.alternarPagamentoCliente('${vId}', ${idx}, '${p.status}', ${valorExibir})" class="px-3 py-1.5 text-[10px] font-black uppercase rounded-lg shadow-sm transition-all ${btnColor}">${isPago ? 'Pago' : 'Pagar'}</button></div></div>`;
                         });
                     }
-
                     const badge = v.tipo === 'pessoal' ? `<span class="bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-400 px-2 py-1 rounded text-[10px] font-black uppercase tracking-wider shadow-sm">Consumo Pessoal</span>` : `<span class="bg-slate-800 text-white dark:bg-slate-700 px-2 py-1 rounded text-[10px] font-black uppercase tracking-wider shadow-sm">Cliente</span>`;
                     const vJsonStr = JSON.stringify(v).replace(/"/g, '&quot;');
-
-                    pedidosHTML += `
-                        <div class="p-5 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 shadow-sm relative flex flex-col h-full hover:shadow-md transition-shadow">
-                            <div class="edit-action absolute top-4 right-4 flex gap-2 z-10">
-                                <button onclick="window.abrirModalEditarPedido('${vId}', '${v.nome_cliente}', '${v.telefone || ''}')" class="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-white px-2.5 py-1.5 rounded-lg text-[10px] font-black hover:bg-brand-light hover:text-white transition-colors shadow-sm">EDITAR</button>
-                                <button onclick="window.excluirVenda('${vId}', '${v.nome_cliente}')" class="bg-rose-600 text-white px-2.5 py-1.5 rounded-lg text-[10px] font-black hover:bg-rose-700 shadow-sm transition-colors">EXCLUIR</button>
-                            </div>
-                            <div class="mb-5 flex-1">
-                                ${badge}
-                                <h4 class="font-black text-xl text-slate-800 dark:text-white uppercase mt-3 leading-none">${v.nome_cliente}</h4>
-                                <div class="flex justify-between items-end mt-3">
-                                    <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">Total: R$ ${formatMoney(v.total)}</span>
-                                    <button onclick="window.abrirRecibo('${vId}', '${vJsonStr}')" class="text-[10px] font-black text-brand-light bg-brand-light/10 dark:bg-brand-light/5 px-3 py-1.5 rounded-lg hover:bg-brand-light hover:text-white transition-colors uppercase tracking-wider">Ver Recibo</button>
-                                </div>
-                            </div>
-                            <div class="mt-auto bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 border border-slate-100 dark:border-slate-800">
-                                <p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest border-b border-slate-200 dark:border-slate-700 pb-2 mb-1">Cobranças Ativas</p>
-                                ${parcelasList}
-                            </div>
-                        </div>`;
+                    pedidosHTML += `<div class="p-5 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 shadow-sm relative flex flex-col h-full hover:shadow-md transition-shadow"><div class="edit-action absolute top-4 right-4 flex gap-2 z-10"><button onclick="window.abrirModalEditarPedido('${vId}', '${v.nome_cliente}', '${v.telefone || ''}')" class="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-white px-2.5 py-1.5 rounded-lg text-[10px] font-black hover:bg-brand-light hover:text-white transition-colors shadow-sm">EDITAR</button><button onclick="window.excluirVenda('${vId}', '${v.nome_cliente}')" class="bg-rose-600 text-white px-2.5 py-1.5 rounded-lg text-[10px] font-black hover:bg-rose-700 shadow-sm transition-colors">EXCLUIR</button></div><div class="mb-5 flex-1">${badge}<h4 class="font-black text-xl text-slate-800 dark:text-white uppercase mt-3 leading-none">${v.nome_cliente}</h4><div class="flex justify-between items-end mt-3"><span class="text-sm font-semibold text-slate-500 dark:text-slate-400">Total: R$ ${formatMoney(v.total)}</span><button onclick="window.abrirRecibo('${vId}', '${vJsonStr}')" class="text-[10px] font-black text-brand-light bg-brand-light/10 dark:bg-brand-light/5 px-3 py-1.5 rounded-lg hover:bg-brand-light hover:text-white transition-colors uppercase tracking-wider">Ver Recibo</button></div></div><div class="mt-auto bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 border border-slate-100 dark:border-slate-800"><p class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest border-b border-slate-200 dark:border-slate-700 pb-2 mb-1">Cobranças Ativas</p>${parcelasList}</div></div>`;
                 });
-                // --- FIM DA ALTERAÇÃO ---
 
                 let cliHTML = '';
                 Object.values(clientesMap).forEach(c => {
@@ -1043,17 +742,7 @@
                 listaVencimentos.sort((a, b) => a.timestamp - b.timestamp);
                 let htmlVenc = '';
                 listaVencimentos.slice(0, 15).forEach(v => {
-                    htmlVenc += `
-                        <div class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm">
-                            <div>
-                                <p class="text-sm font-black text-slate-800 dark:text-slate-100 uppercase">${v.cliente}</p>
-                                <p class="${v.dias > 0 ? 'text-rose-500' : 'text-amber-500'} font-bold text-xs mt-0.5">Vencimento: ${v.dataStr}</p>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <span class="font-black text-base dark:text-white">R$ ${formatMoney(v.valorCobrar)}</span>
-                                <button onclick="window.enviarCobrancaWPP('${v.tel}', '${v.cliente}', '${v.num}', ${v.valorCobrar}, '${v.dataStr}', ${v.dias})" class="p-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-all shadow-md active:scale-95"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771z"/></svg></button>
-                            </div>
-                        </div>`;
+                    htmlVenc += `<div class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm"><div><p class="text-sm font-black text-slate-800 dark:text-slate-100 uppercase">${v.cliente}</p><p class="${v.dias > 0 ? 'text-rose-500' : 'text-amber-500'} font-bold text-xs mt-0.5">Vencimento: ${v.dataStr}</p></div><div class="flex items-center gap-4"><span class="font-black text-base dark:text-white">R$ ${formatMoney(v.valorCobrar)}</span><button onclick="window.enviarCobrancaWPP('${v.tel}', '${v.cliente}', '${v.num}', ${v.valorCobrar}, '${v.dataStr}', ${v.dias})" class="p-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition-all shadow-md active:scale-95"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771z"/></svg></button></div></div>`;
                 });
                 document.getElementById('lista-vencimentos').innerHTML = htmlVenc || '<p class="text-slate-500 dark:text-slate-400 font-medium">Sem vencimentos em aberto.</p>';
             } catch (err) { console.error("Erro leitura:", err); }
@@ -1079,7 +768,6 @@
                 const isPaying = statusAtual === 'pendente';
                 window.saldoCarteira += isPaying ? valorBaseDaParcela : -valorBaseDaParcela;
                 await updateDoc(doc(db, "sistema", "carteira"), { saldo: window.saldoCarteira });
-
                 const vSnap = await getDoc(doc(db, "vendas", vId));
                 let parcelas = vSnap.data().parcelas;
                 parcelas[pIdx].status = isPaying ? 'pago' : 'pendente';
@@ -1100,17 +788,26 @@
             }
         };
 
-        // ================= RECIBO (COMPARTILHAMENTO DE FOTO) =================
         window.abrirRecibo = (vId, vJson) => {
             const v = typeof vJson === 'string' ? JSON.parse(vJson) : vJson;
             const qtdParcelas = v.parcelas ? v.parcelas.length : 1;
             window.reciboAtualExport = v;
-
-            let itensHTML = '';
+            
+            // 1. Lógica dos Itens (Com Grid Alinhado)
+            let itensHTML = `<div class="grid grid-cols-[3fr_1fr] gap-2 pb-2 mb-2 border-b border-slate-200 dark:border-slate-700 text-[10px] font-bold text-slate-400 uppercase tracking-widest"><span>Produto</span><span class="text-right">Valor</span></div>`;
+            
             v.itens.forEach(item => {
                 const price = parseFloat(item.valor || item.preco || item.total || item.custo || item.revenda || 0);
-                const valParc = (price / qtdParcelas).toFixed(2);
-                itensHTML += `<div class="py-3 border-b border-slate-100 dark:border-slate-800 last:border-0 font-mono text-sm"><div class="flex justify-between items-start"><div><span class="text-[10px] text-slate-400 font-bold block">${item.codigo || '—'}</span><h5 class="text-xs font-black text-slate-800 dark:text-slate-200 uppercase">${item.nome || item.nomeOriginal}</h5></div><div class="text-right whitespace-nowrap pl-4"><span class="text-xs font-black text-slate-800 dark:text-slate-200 block">R$ ${formatMoney(price)}</span><span class="text-[9px] text-slate-400 font-bold">${qtdParcelas}X (R$ ${formatMoney(parseFloat(valParc))})</span></div></div></div>`;
+                itensHTML += `
+                <div class="grid grid-cols-[3fr_1fr] gap-2 py-2 items-center border-b border-slate-100 dark:border-slate-800/50 last:border-0">
+                    <div class="pr-2">
+                        <span class="text-[9px] text-slate-400 font-bold block leading-none mb-1">Cód: ${item.codigo || '—'}</span>
+                        <span class="text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight block">${item.nome || item.nomeOriginal}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-sm font-black text-slate-800 dark:text-slate-200 block">R$ ${formatMoney(price)}</span>
+                    </div>
+                </div>`;
             });
 
             document.getElementById('recibo-cliente').innerText = v.nome_cliente;
@@ -1118,52 +815,51 @@
             document.getElementById('recibo-itens').innerHTML = itensHTML;
             document.getElementById('recibo-total').innerText = `R$ ${formatMoney(v.total)}`;
 
-            let parcHTML = ''; let tPago = 0; let tPendente = 0;
-
-            // Loop para processar parcelas e calcular juros/multa
+            // 2. Lógica das Parcelas (Com Grid Alinhado)
+            let parcHTML = `<div class="grid grid-cols-[2fr_2fr_1fr] gap-2 pb-2 mb-2 border-b border-slate-200 dark:border-slate-700 text-[10px] font-bold text-slate-400 uppercase tracking-widest"><span>Vencimento</span><span class="text-right">Valor</span><span class="text-right">Status</span></div>`;
+            let tPago = 0; let tPendente = 0;
+            
             v.parcelas.forEach(p => {
-                const pgo = p.status === 'pago';
-                let valorExibir = parseFloat(p.valor);
+                const pgo = p.status === 'pago'; 
+                let valorExibir = parseFloat(p.valor); 
                 let textoJuros = '';
-
-                if (pgo) {
-                    tPago += valorExibir;
+                
+                if (pgo) { 
+                    tPago += valorExibir; 
                 } else {
                     let statusP = calcularStatusPrazo(p.vencimento);
                     if (statusP.atrasado && statusP.diasAtraso > 0) {
-                        const multa = 5.93;
-                        const juros = statusP.diasAtraso * 0.89;
+                        const multa = 5.93; const juros = statusP.diasAtraso * 0.89;
                         valorExibir += (multa + juros);
-                        textoJuros = `<br><span class="text-[9px] text-rose-500 font-bold leading-none uppercase">+ Juros/Multa (R$ ${formatMoney(multa + juros)})</span>`;
+                        textoJuros = `<span class="text-[9px] text-rose-500 font-bold block leading-none mt-1">+ R$ ${formatMoney(multa + juros)} (Multa)</span>`;
                     }
                     tPendente += valorExibir;
                 }
-
-                const badge = pgo ? '<span class="text-[9px] text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded uppercase font-black">PAGO</span>' : '<span class="text-[9px] text-rose-500 bg-rose-100 px-1.5 py-0.5 rounded uppercase font-black">PENDENTE</span>';
-
-                parcHTML += `<div class="flex justify-between items-center text-xs text-slate-600 dark:text-slate-400 font-bold py-1.5 border-b border-slate-100 dark:border-slate-800 last:border-0">
+                
+                const badge = pgo 
+                    ? '<span class="text-[9px] text-emerald-700 bg-emerald-100 dark:bg-emerald-900/40 dark:text-emerald-400 px-2 py-1 rounded font-black uppercase">PAGO</span>' 
+                    : '<span class="text-[9px] text-rose-600 bg-rose-100 dark:bg-rose-900/40 dark:text-rose-400 px-2 py-1 rounded font-black uppercase">PENDENTE</span>';
+                    
+                parcHTML += `
+                <div class="grid grid-cols-[2fr_2fr_1fr] gap-2 py-2 items-center border-b border-slate-100 dark:border-slate-800/50 last:border-0">
                     <div>
-                        <span>${p.numero}ª Parc (${p.vencimento})</span>
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">${p.numero}ª Parc</span>
+                        <span class="text-[10px] text-slate-500 block">${p.vencimento}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-sm font-black text-slate-800 dark:text-slate-200 block">R$ ${formatMoney(valorExibir)}</span>
                         ${textoJuros}
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span>R$ ${formatMoney(valorExibir)}</span>
+                    <div class="text-right flex justify-end">
                         ${badge}
                     </div>
                 </div>`;
             });
 
-            // Rodapé com os totais corrigidos
-            parcHTML += `<div class="mt-2 pt-2 flex justify-between items-center"><span class="text-[10px] font-black text-emerald-600">JÁ PAGO: R$ ${formatMoney(tPago)}</span><span class="text-[10px] font-black text-rose-500">A RECEBER: R$ ${formatMoney(tPendente)}</span></div>`;
-
-            // Injeção do Aviso Legal no final do container de parcelas
-            parcHTML += `
-                <div class="mt-4 pt-3 border-t border-dashed border-slate-300 dark:border-slate-700 text-[9px] text-slate-500 dark:text-slate-400 text-center leading-relaxed">
-                    <strong>AVISO IMPORTANTE:</strong><br> 
-                    O pagamento após o vencimento está sujeito à incidência de multa por atraso no valor de <strong>R$ 5,93</strong>, acrescida de juros proporcionais de <strong>R$ 0,89</strong> por dia de atraso.
-                </div>
-            `;
-
+            parcHTML += `<div class="mt-4 pt-3 border-t-2 border-slate-200 dark:border-slate-700 flex justify-between items-center"><span class="text-[10px] font-black text-emerald-600 uppercase tracking-wider">JÁ PAGO: R$ ${formatMoney(tPago)}</span><span class="text-[10px] font-black text-rose-500 uppercase tracking-wider">A RECEBER: R$ ${formatMoney(tPendente)}</span></div>`;
+            
+            parcHTML += `<div class="mt-4 p-3 bg-rose-50 dark:bg-rose-900/10 border border-rose-100 dark:border-rose-900/30 rounded-xl text-[9px] text-slate-500 dark:text-slate-400 text-center leading-relaxed"><strong>AVISO:</strong> O pagamento após o vencimento incide multa de <strong>R$ 5,93</strong> + juros de <strong>R$ 0,89</strong> por dia de atraso.</div>`;
+            
             document.getElementById('recibo-parcelas-lista').innerHTML = parcHTML;
             document.getElementById('modal-recibo').classList.remove('hidden');
         };
@@ -1172,26 +868,104 @@
             const area = document.getElementById('recibo-print-area');
             try {
                 const canvas = await html2canvas(area, { scale: 3, useCORS: true, backgroundColor: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff' });
+                
+                // Extração de dados para montar a legenda e o link
+                const tel = window.reciboAtualExport?.telefone || '';
+                const idCliente = tel.replace(/\D/g, '');
+                const link = idCliente ? `https://duckmj.github.io/Oboticario2.0/cliente.html?id=${idCliente}` : 'Link indisponível (cadastre o telefone)';
+                
+                // Texto que acompanhará a imagem
+                const textoCaption = `Olá, *${window.reciboAtualExport?.nome_cliente || 'Cliente'}*! 🛍️\nAqui está o comprovante detalhado da sua compra.\n\nAcesse seu painel completo para acompanhar suas parcelas no link abaixo:\n${link}`;
+
                 canvas.toBlob(async (blob) => {
                     const file = new File([blob], `Recibo_${window.reciboAtualExport?.nome_cliente || 'Cliente'}.png`, { type: "image/png" });
-                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share({ files: [file], title: 'Comprovante O Boticário' });
+                    
+                    // Tenta usar o compartilhamento nativo do celular (Mobile) com texto incluso
+                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file], text: textoCaption })) {
+                        await navigator.share({ 
+                            files: [file], 
+                            title: 'Comprovante O Boticário', 
+                            text: textoCaption 
+                        });
                     } else {
+                        // Fallback para PC (Baixa a imagem e abre o WhatsApp Web com o texto preenchido)
                         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click();
-                        alert("Comprovante baixado! Anexe a imagem no WhatsApp.");
-                        window.open('https://web.whatsapp.com/', '_blank');
+                        alert("O comprovante foi baixado para o seu dispositivo!\nO WhatsApp será aberto agora. Cole/anexe a imagem na conversa.");
+                        
+                        const waLink = idCliente 
+                            ? `https://wa.me/55${idCliente}?text=${encodeURIComponent(textoCaption)}` 
+                            : 'https://web.whatsapp.com/';
+                        window.open(waLink, '_blank');
                     }
                 });
             } catch (e) { alert("Erro ao gerar imagem."); }
         };
 
-        // ================= IMPORTAÇÃO =================
+        // ================= IMPORTAÇÃO & ADIÇÃO MANUAL =================
         window.toggleClienteSelect = () => { document.getElementById('div-cliente').style.display = document.getElementById('modal-destino').value === 'estoque' ? 'none' : 'block'; };
-        window.fecharModal = () => { document.getElementById('modal-alocacao').classList.add('hidden'); window.filaDeAlocacao = []; };
+        
+        window.fecharModal = () => { 
+            document.getElementById('modal-alocacao').classList.add('hidden'); 
+            // Atualiza a badge caso feche o modal
+            document.getElementById('badge-fila').innerText = window.filaDeAlocacao.length;
+        };
+
+        // Função para Adição Manual
+        window.adicionarManual = () => {
+            const cod = document.getElementById('man-cod').value || 'S/C';
+            const nome = document.getElementById('man-nome').value.trim().toUpperCase();
+            const qtd = parseInt(document.getElementById('man-qtd').value) || 1;
+            const custoTotal = parseFloat(document.getElementById('man-custo').value.replace(',', '.'));
+            const revendaTotal = parseFloat(document.getElementById('man-revenda').value.replace(',', '.'));
+
+            if(!nome || isNaN(custoTotal) || isNaN(revendaTotal)) {
+                alert("Preencha o Nome do Produto, Custo Total e Revenda Total obrigatoriamente!");
+                return;
+            }
+
+            const custoUnit = custoTotal / qtd;
+            const revUnit = revendaTotal / qtd;
+
+            if (custoTotal === 0 && revendaTotal === 0) {
+                window.consolidacaoAtual.brindes.push({ codigo: cod, nome: nome, qtd: qtd });
+                alert("Brinde/Amostra adicionado à fila.");
+            } else {
+                let novos = [];
+                for (let i = 0; i < qtd; i++) {
+                    novos.push({
+                        codigo: cod,
+                        nomeOriginal: nome,
+                        nome: qtd > 1 ? `${nome} (${i + 1}/${qtd})` : nome,
+                        custoUnitario: custoUnit,
+                        revendaUnitario: revUnit
+                    });
+                }
+                window.filaDeAlocacao.push(...novos);
+                window.totalItensFila += qtd;
+                document.getElementById('badge-fila').innerText = window.filaDeAlocacao.length;
+            }
+
+            document.getElementById('man-cod').value = '';
+            document.getElementById('man-nome').value = '';
+            document.getElementById('man-qtd').value = '1';
+            document.getElementById('man-custo').value = '';
+            document.getElementById('man-revenda').value = '';
+            document.getElementById('man-nome').focus();
+        };
+
+        window.iniciarProcessamentoManual = () => {
+            if (window.filaDeAlocacao.length === 0) {
+                 window.abrirCheckout();
+            } else {
+                 window.processarProximoDaFila();
+            }
+        };
 
         window.processarProximoDaFila = () => {
             if (window.filaDeAlocacao.length === 0) { window.abrirCheckout(); return; }
             const item = window.filaDeAlocacao.shift(); window.itemSendoAlocado = item;
+            
+            document.getElementById('badge-fila').innerText = window.filaDeAlocacao.length;
             document.getElementById('modal-progresso').innerText = `${window.totalItensFila - window.filaDeAlocacao.length}/${window.totalItensFila}`;
             document.getElementById('modal-produto-nome').innerText = item.nome;
             document.getElementById('modal-produto-custo').innerText = `R$ ${formatMoney(item.custoUnitario)}`;
@@ -1279,14 +1053,18 @@
                 await batch.commit();
 
                 window.consolidacaoAtual = { clientes: {}, estoque: [], contatosNovos: {}, brindes: [] };
-                document.getElementById('input-frete').value = ''; document.getElementById('upload-text').innerText = "Sucesso! Anexe outro PDF.";
+                document.getElementById('input-frete').value = ''; 
+                document.getElementById('upload-text').innerText = "Sucesso! Anexe outro PDF.";
+                document.getElementById('badge-fila').innerText = "0";
+                window.totalItensFila = 0;
                 window.navigate('pedidos');
             } catch (err) { alert("Erro ao gravar dados."); }
         };
 
+        // LÓGICA DE PDF ATUALIZADA PARA SUPORTAR NF E EXTRATO (CÓDIGOS DE 5 DÍGITOS)
         document.getElementById('pdf-upload').addEventListener('change', async (e) => {
             const file = e.target.files[0]; if (!file) return;
-            document.getElementById('upload-text').innerText = "Processando Extrato...";
+            document.getElementById('upload-text').innerText = "Processando Arquivo...";
             try {
                 const arrBuf = await file.arrayBuffer(); const pdf = await pdfjsLib.getDocument({ data: arrBuf }).promise;
                 let linhas = []; window.numeroPedidoAtual = "";
@@ -1307,21 +1085,29 @@
 
                 let prods = []; window.consolidacaoAtual.brindes = [];
                 linhas.forEach(l => {
-                    let cMatch = l.match(/\b(\d{2}\.\d{3})\b/); if (!cMatch) return;
+                    // Matcher ajustado: Aceita XX.XXX (Nota Fiscal) ou XXXXX (Extrato)
+                    let cMatch = l.match(/\b(\d{2}\.\d{3}|\d{5})\b/); if (!cMatch) return;
                     let c = cMatch[1]; let vals = l.match(/\b\d{1,4},\d{2}\b/g); if (!vals || vals.length < 4) return;
                     let toks = l.split(/\s+/); let idx = toks.findIndex(t => t.includes(c)); let qtd = 1;
                     if (idx > 0 && /^\d+$/.test(toks[idx - 1])) qtd = parseInt(toks[idx - 1]);
                     else if (idx < toks.length - 1 && /^\d+$/.test(toks[idx + 1])) qtd = parseInt(toks[idx + 1]);
 
                     let iV1 = l.indexOf(vals[0]);
-                    let nOrig = l.substring(0, iV1).replace(/\b\d{2}\.\d{3}\b/g, '').replace(new RegExp(`\\b${qtd}\\b`), '').trim().replace(/^[^\wÀ-Ú]+|[^\wÀ-Ú]+$/gi, '');
-                    let custo = parseFloat(vals[vals.length - 2].replace(',', '.')); let rev = parseFloat(vals[vals.length - 3].replace(',', '.'));
+                    // Expressão para limpar corretamente o código do nome independente do formato
+                    let nOrig = l.substring(0, iV1).replace(/\b(?:\d{2}\.\d{3}|\d{5})\b/g, '').replace(new RegExp(`\\b${qtd}\\b`), '').trim().replace(/^[^\wÀ-Ú]+|[^\wÀ-Ú]+$/gi, '');
+                    
+                    // As posições monetárias no array funcionam para os dois layouts (NF e Extrato)
+                    let custo = parseFloat(vals[vals.length - 2].replace(',', '.')); 
+                    let rev = parseFloat(vals[vals.length - 3].replace(',', '.'));
 
                     if (custo === 0 && rev === 0) { window.consolidacaoAtual.brindes.push({ codigo: c, nome: nOrig, qtd: qtd }); return; }
                     for (let i = 0; i < qtd; i++) prods.push({ codigo: c, nomeOriginal: nOrig, nome: qtd > 1 ? `${nOrig} (${i + 1}/${qtd})` : nOrig, custoUnitario: custo / qtd, revendaUnitario: rev / qtd });
                 });
 
-                window.filaDeAlocacao = prods; window.totalItensFila = prods.length;
+                window.filaDeAlocacao.push(...prods); 
+                window.totalItensFila += prods.length;
+                document.getElementById('badge-fila').innerText = window.filaDeAlocacao.length;
+
                 if (prods.length > 0) window.processarProximoDaFila();
                 else alert("Nenhum item cobrado no PDF. Foram importados apenas Brindes.");
             } catch (er) { alert("Falha ao ler PDF."); e.target.value = ''; }
@@ -1330,5 +1116,4 @@
         document.addEventListener('DOMContentLoaded', window.carregarBaseDados);
     </script>
 </body>
-
 </html>
